@@ -1,3 +1,9 @@
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// Copyright 2012, 2013 Matthew Jaquish
+// Licensed under The MIT License
+// http://opensource.org/licenses/MIT
+// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 /*
  * The identity map is a special kind of object that relies on a private map
  * with privileged methods to secure the resource instances.
