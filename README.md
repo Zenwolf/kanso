@@ -3,11 +3,17 @@ Kanso
 
 Kanso is a light-weight architecture for thick-client
 browser web applications. Kanso's philosophy is to
-provide simple systems that can be used based on your
+provide simple systems that can be used at your own 
 discretion. You can use these patterns in many ways.
 Kanso molds to the skill of the user.
 
 ["By removing the non-essential and ornate, we can express a bare and honest simplicity."](http://aentan.com/design/wabi-sabi-and-japanese-aesthetics/)
+
+
+Project Status
+------------------------------------------------------------
+
+Unstable; in development.
 
 
 Overview
