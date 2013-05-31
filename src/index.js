@@ -6,11 +6,13 @@
 
 define(
     [ './resource'
+    , './identity-map'
     ],
 
-    function (resource) {
+    function (resource, identityMap) {
         return {
-            resource: resource
+            resource   : resource,
+            identityMap: identityMap
         };
     }
 );
