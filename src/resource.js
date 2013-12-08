@@ -1,197 +1,186 @@
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// Copyright 2012, 2013 Matthew Jaquish
-// Licensed under The MIT License
-// http://opensource.org/licenses/MIT
-// ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/**
+ * A resource object that contains data the associated logic. It operates on a key/value model,
+ * can be serialized/deserialized to/from JSON.
+ */
+core.Class('kanso.Resource', {
+    /**
+     * Create a generic resource from a @config {Object}.
+     *   - @config.type {String}
+     *   - @config.data {Map}
+     */
+    construct: function (config) {
+        config = config || core.Main.createDict();
+        kanso.Resource.count += 1;
 
-define(function () {
+        /** {Boolean} True if the resource data object is initialized. */
+        this.__isInit = false;
 
-    var module        = {};
-    var resource      = {};
-    var resourceCount = 0;
+        /** {Boolean} True if the data has been loaded from the data source. */
+        this.__isLoaded = false;
 
+        /** {String} The config type. */
+        this.__type = config.type || 'generic';
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Resource mixin.
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        /** {Map} Child data container. */
+        this._data = core.Main.createDict();
 
-    var asResource = (function () {
-        /*
-         * Init the object with expected properties. You can pass in an optional
-         * config object:
-         *
-         * config.type {String} Resource type.
-         * config.vals {Object} Key/val map.
+        if ( config.data ) {
+            this.initData(config.data);
+        }
+    },
+
+    members: {
+        /**
+         * {Boolean} Parses a @data {Map} and sets a map representing the internal data for this
+         * resource. Returns true if it successfully initialized the data, otherwise false.
          */
-        function initResource(config) {
-            config = config || {};
+        initData: function (data) {
+            var type = kokou.Type;
+            var o = null;
+            var keys = null;
+            var idKey = 'id';
 
-            this.data = this.data || {};
-
-            if ( this.data.isInit ) { return this; }
-
-            this.data.isInit   = false;
-            this.data.isLoaded = false;
-            this.data.type     = config.type || 'generic';
-            this.data.vals     = {};
-
-            /*
-             * Parses a data object and returns a map representing
-             * the internal property values for this resource.
-             */
-            if ( config.vals ) {
-                Object.keys(config.vals).forEach( function (key) {
-                    this.data.vals[key] = config.vals[key];
-                }, this);
+            if ( this.isInitialized() || !data || !type.isObject(data) ) {
+                return false;
             }
 
-            if ( !this.data.vals['id'] ) {
-                this.data.vals['id'] = this.data.type + resourceCount;
+            o = core.Main.createDict();
+            keys = Object.keys(data);
+
+            if ( keys.length < 1 ) {
+                return false;
             }
 
-            this.data.isInit = true;
-
-            return this;
-        }
-
-        /*
-         * Get a value by property name.
-         */
-        function get(name) {
-            return this.data.vals[name];
-        }
-
-        /*
-         * Set the value of a property.
-         * If the new value is the same as the old value, nothing happens.
-         * If valued is changed it returns old value, otherwise undefined.
-         */
-        function set(name, value) {
-            var vals = this.data.vals;
-            var currentVal = vals[name];
-
-            /*
-             * Don't replace the value if it is the same, and don't replace
-             * it if the value is specifically undefined.
-             */
-            if ( currentVal === value || typeof value === 'undefined' ) {
-                return; // do nothing
-            }
-
-            vals[name] = value;
-
-            return currentVal; // Return the previous value.
-        }
-
-        /*
-         * Return the specific type of this resource.
-         */
-        function getType() {
-            return this.data.type;
-        }
-
-        /*
-         * Whether or not the resource data has been initialized yet.
-         */
-        function isInitialized() {
-            return this.data.isInit;
-        }
-
-        /*
-         * Whether or not the real data has been loaded yet.
-         * If it is false, consider this a ghost object that can be
-         * filled in later.
-         */
-        function isLoaded() {
-            return this.data.isLoaded;
-        }
-
-        /*
-         * Mark the resource as loaded. Return true if set to loaded,
-         * otherwise returns false (false means it was already loaded).
-         */
-        function setLoaded() {
-            if (this.data.isLoaded) { return false; }
-            return this.data.isLoaded = true;
-        }
-
-        /*
-         * This should be called when the resource is no longer used.
-         */
-        function terminate() {
-            // Override for specific cleanup logic.
-        }
-
-        function toJSON() {
-            return JSON.stringify({
-                type: this.data.type,
-                vals: this.data.vals
+            keys.forEach(function (key) {
+                o[key] = data[key];
             });
+
+            if ( !o[idKey] ) {
+                o[idKey] = this.__type + kanso.Resource.count;
+            }
+
+            this._data = o;
+            this.__isInit = true;
+
+            return true;
+        },
+
+        /**
+         * {String|Number|Integer|Array|Function|Map|Object} Set @name {String} with
+         * @value {String|Number|Integer|Array|Function|Map|Object}. If the new value is the same
+         * as the old value, nothing happens. If the value changed it returns the old value,
+         * otherwise undefined.
+         */
+        set: function (name, value) {
+            var currentVal = this._data[name];
+            var expected;
+            var actual;
+
+            if ( jasy.Env.isSet('debug') ) {
+                if ( !this._data[name] ) {
+                    throw new Error("Tried to set invalid property '" + name + "'.");
+                }
+            }
+
+            /*
+             * Don't replace the value if it is the same, and don't replace it if the value
+             * is specifically undefined.
+             */
+            if ( typeof value === 'object' ) {
+                expected = JSON.stringify(currentVal);
+                actual = JSON.stringify(value);
+
+                if ( actual === expected ) {
+                    // Do nothing.
+                    return;
+                }
+            }
+            else if ( currentVal === value || typeof value === 'undefined' ) {
+                // Do nothing.
+                return;
+            }
+
+            this._data[name] = value;
+
+            return currentVal;
+        },
+
+        /**
+         * {String} Return the specific type of this resource.
+         */
+        getType: function () {
+            return this.__type;
+        },
+
+        /**
+         * {Boolean} Whether or not the resource data has been initialized yet.
+         */
+        isInitialized: function () {
+            return this.__isInit;
+        },
+
+        /**
+         * {Boolean} Whether or not the real data has been loaded yet. If it is false, consider
+         * this a ghost object that will be filled in later.
+         */
+        isLoaded: function () {
+            return this.__isLoaded;
+        },
+
+        /**
+         * {Boolean} Mark the resource as loaded. Return true if set to loaded, otherwise
+         * it returns false, which means it was already loaded.
+         */
+        setLoaded: function () {
+            if ( this.__isLoaded ) {
+                return false;
+            }
+
+            this.__isLoaded = true;
+
+            return true;
+        },
+
+        /**
+         * Tell the resource that is should be terminated/destroyed. Executes cleanup logic.
+         */
+        terminate: function () {
+           // Override for resource-specific cleanup logic.
+        },
+
+        /**
+         * {Map} Create a resource config from this resource.
+         */
+        toConfig: function () {
+            return {
+                type: this.__type,
+                data: this._data
+            };
+        },
+
+        /**
+         * {String} Serialize this resource into JSON format.
+         */
+        toJSON: function () {
+            return JSON.stringify( this.toConfig() );
         }
-
-        return function () {
-            this.initResource  = initResource;
-            this.get           = get;
-            this.set           = set;
-            this.getType       = getType;
-            this.isInitialized = isInitialized;
-            this.isLoaded      = isLoaded;
-            this.setLoaded     = setLoaded;
-            this.terminate     = terminate;
-            this.toJSON        = toJSON;
-        };
-    } ());
-
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Prototype object.
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    asResource.call(resource);
-
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Factory function.
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    function create(config) {
-        var obj = null;
-
-        resourceCount += 1;
-        obj = Object.create(resource);
-        config = ( typeof config === 'object' ) ? config : null;
-
-        if ( config !== null ) {
-            obj.initResource(config);
-        }
-
-        return obj;
     }
+});
 
+core.Main.addStatics('kanso.Resource', {
+    // Instance count.
+    count: 0,
 
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // JSON deserialization.
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    function fromJSON(json) {
+    // Static method to deserialize from JSON.
+    fromJSON: function (txt) {
         var resource = null;
-        var config   = null;
+        var config = null;
 
-        if ( typeof json !== 'string' ) { return null; }
+        if ( typeof txt !== 'string' ) {
+            return null;
+        }
 
-        config   = JSON.parse(json);
-        resource = create(config);
-
-        return resource;
+        config = JSON.parse(txt);
+        resource = new this(config);
     }
-
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    // Public module.
-    // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-    module.create     = create;
-    module.asResource = asResource;
-    module.fromJSON   = fromJSON;
-
-    return module;
 });
