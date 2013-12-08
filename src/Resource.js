@@ -12,16 +12,16 @@ core.Class('kanso.Resource', {
         config = config || core.Main.createDict();
         kanso.Resource.count += 1;
 
-        /** {Boolean} True if the resource data object is initialized. */
+        /** {=Boolean} True if the resource data object is initialized. */
         this.__isInit = false;
 
-        /** {Boolean} True if the data has been loaded from the data source. */
+        /** {=Boolean} True if the data has been loaded from the data source. */
         this.__isLoaded = false;
 
-        /** {String} The config type. */
+        /** {=String} The config type. */
         this.__type = config.type || 'generic';
 
-        /** {Map} Child data container. */
+        /** {=Map} Child data container. */
         this._data = core.Main.createDict();
 
         if ( config.data ) {

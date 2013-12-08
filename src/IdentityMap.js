@@ -25,11 +25,17 @@ core.Class('kanso.IdentityMap', {
      * it can use to publish events.
      */
     construct: function (resourceCtor, emitter) {
-        // Private map of resource instances.
+        /** {=Map} Private map of resource instances. */
         var resourceMap = core.Main.createDict();
 
+        /** {=Function} A resource constructor function. */
         this.__resourceCtor = resourceCtor;
+
+        /** {=kokou.Emitter} Event emitter to publish events to. */
         this.__emitter = emitter || null;
+
+        /** {=Object} */
+        this.__events__ = core.Class.getEvents(kanso.IdentityMap);
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // Priviledged methods that need to access the resource map.
@@ -127,7 +133,6 @@ core.Class('kanso.IdentityMap', {
          * {kanso.Resource} Remove a resource from the map by @id {String}.
          */
         this.remove = function (id) {
-            var events = null;
             var resource = null;
 
             id += '';
@@ -137,9 +142,7 @@ core.Class('kanso.IdentityMap', {
                 delete resourceMap[id];
 
                 if ( this.__emitter ) {
-                    events = core.Class.getEvents( kanso.IdentityMap );
-
-                    this.__emitter.emit( e.RESOURCE_REMOVED,
+                    this.__emitter.emit( this.__events__.RESOURCE_REMOVED,
                         this.__createResourceRemovedEvent(resource) );
                 }
             }
@@ -160,16 +163,13 @@ core.Class('kanso.IdentityMap', {
          */
         this.__create = function (id) {
             var resource = null;
-            var events = null;
 
             id += '';
 
             resource = new this.__resourceCtor({ id: id });
 
             if ( this.__emitter ) {
-                events = core.Class.getEvents(kanso.IdentityMap);
-
-                this.__emitter.emit( events.RESOURCE_CREATED,
+                this.__emitter.emit( this.__events__.RESOURCE_CREATED,
                     this.__createResourceCreatedEvent(resource) );
             }
 
@@ -196,18 +196,14 @@ core.Class('kanso.IdentityMap', {
          * {Object} Use the @resource {kanso.Resource} to create an event.
          */
         __createResourceCreatedEvent: function (resource) {
-            var events = core.Class.getEvents(kanso.IdentityMap);
-
-            return this.__createEvent(events.RESOURCE_CREATED, resource);
+            return this.__createEvent(this.__events__.RESOURCE_CREATED, resource);
         },
 
         /**
          * {Object} Use the @resource {kanso.Resource} to create an event.
          */
         __createResourceRemovedEvent: function (resource) {
-            var events = core.Class.getEvents(kanso.IdentityMap);
-
-            return this.__createEvent(events.RESOURCE_REMOVED, resource);
+            return this.__createEvent(this.__events__.RESOURCE_REMOVED, resource);
         },
 
         __createEvent: function (type, resource) {
