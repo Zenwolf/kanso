@@ -1,6 +1,6 @@
 /**
- * A resource object that contains data the associated logic. It operates on a key/value model,
- * can be serialized/deserialized to/from JSON.
+ * A resource object that contains data and the associated logic to operate on it. It uses
+ * a key/value model and it can be serialized/deserialized to/from JSON.
  */
 core.Class('kanso.Resource', {
     /**
