@@ -1,13 +1,5 @@
-(function () {
 /**
- * The identity map is a special kind of object that relies on a private map
- * with privileged methods to secure the resource instances.
- */
-
-var type = kokou.Type;
-
-/**
- * An identity map that manages resources via priviledged methods that are the
+ * The identity map that manages resources via priviledged methods that are the
  * only methods with access to a private resource map.
  */
 core.Class('kanso.IdentityMap', {
@@ -77,7 +69,7 @@ core.Class('kanso.IdentityMap', {
             var resources = [];
 
             if ( jasy.Env.isSet('debug') ) {
-                if ( !type.isArray(ids) ) {
+                if ( !kokou.Type.isArray(ids) ) {
                     throw new Error('ids must be type array.');
                 }
             }
@@ -216,4 +208,3 @@ core.Class('kanso.IdentityMap', {
     }
 });
 
-} ());
