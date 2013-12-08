@@ -50,7 +50,7 @@ TBD.
 Data Layer
 ------------------------------------------------------------
 
-Kanso's data layer consists of three parts:
+Kanso's data layer consists of the following:
 
 1. Resource
 2. Identity map
