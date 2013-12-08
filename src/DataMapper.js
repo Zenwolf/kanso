@@ -33,6 +33,9 @@ core.Class('kanso.DataMapper', {
         /** {=Function} Response error handler, a NOOP by default. */
         this.__handleError = function () {};
 
+        /** {=Object} */
+        this.__events__ = core.Class.getEvents(kanso.DataMapper);
+
     },
 
     members: {
@@ -208,13 +211,21 @@ core.Class('kanso.DataMapper', {
             });
 
             if ( this.__emitter && newResourcesLoaded.length > 0 ) {
-                evt = this.__createResourcesLoadedEvent(newResourcesLoaded, []);
+                evt = this.__createResourcesLoadedEvent(newResourcesLoaded);
                 this.__dispatch(evt);
             }
 
             if ( callback ) {
                 callback(resources);
             }
+        },
+
+        __createResourcesLoadedEvent: function (resources) {
+            return {
+                type     : this.__events__.RESOURCES_LOADED,
+                timestamp: +(new Date()),
+                resources: resources
+            };
         },
 
         __dispatch: function (evt) {
