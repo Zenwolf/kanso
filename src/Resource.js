@@ -1,6 +1,7 @@
 /**
- * A resource object that contains data and the associated logic to operate on it. It uses
- * a key/value model and it can be serialized/deserialized to/from JSON.
+ * A resource object that contains data and the associated logic to operate on
+ * it. It uses a key/value model and it can be serialized/deserialized to/from
+ * JSON.
  */
 core.Class('kanso.Resource', {
     /**
@@ -31,8 +32,9 @@ core.Class('kanso.Resource', {
 
     members: {
         /**
-         * {Boolean} Parses a @data {Map} and sets a map representing the internal data for this
-         * resource. Returns true if it successfully initialized the data, otherwise false.
+         * {Boolean} Parses a @data {Map} and sets a map representing the
+         * internal data for this resource. Returns true if it successfully
+         * initialized the data, otherwise false.
          */
         initData: function (data) {
             var type = kokou.Type;
@@ -66,10 +68,10 @@ core.Class('kanso.Resource', {
         },
 
         /**
-         * {String|Number|Integer|Array|Function|Map|Object} Set @name {String} with
-         * @value {String|Number|Integer|Array|Function|Map|Object}. If the new value is the same
-         * as the old value, nothing happens. If the value changed it returns the old value,
-         * otherwise undefined.
+         * {String|Number|Integer|Array|Function|Map|Object} Set @name {String}
+         * with @value {String|Number|Integer|Array|Function|Map|Object}. If the
+         * new value is the same as the old value, nothing happens. If the value
+         * changed it returns the old value, otherwise undefined.
          */
         set: function (name, value) {
             var currentVal = this._data[name];
@@ -78,13 +80,14 @@ core.Class('kanso.Resource', {
 
             if ( jasy.Env.isSet('debug') ) {
                 if ( !this._data[name] ) {
-                    throw new Error("Tried to set invalid property '" + name + "'.");
+                    throw new Error(
+                        "Tried to set invalid property '" + name + "'.");
                 }
             }
 
             /*
-             * Don't replace the value if it is the same, and don't replace it if the value
-             * is specifically undefined.
+             * Don't replace the value if it is the same, and don't replace it
+             * if the value is specifically undefined.
              */
             if ( typeof value === 'object' ) {
                 expected = JSON.stringify(currentVal);
@@ -120,16 +123,16 @@ core.Class('kanso.Resource', {
         },
 
         /**
-         * {Boolean} Whether or not the real data has been loaded yet. If it is false, consider
-         * this a ghost object that will be filled in later.
+         * {Boolean} Whether or not the real data has been loaded yet. If it is
+         * false, consider this a ghost object that will be filled in later.
          */
         isLoaded: function () {
             return this.__isLoaded;
         },
 
         /**
-         * {Boolean} Mark the resource as loaded. Return true if set to loaded, otherwise
-         * it returns false, which means it was already loaded.
+         * {Boolean} Mark the resource as loaded. Return true if set to loaded,
+         * otherwise it returns false, which means it was already loaded.
          */
         setLoaded: function () {
             if ( this.__isLoaded ) {
@@ -142,7 +145,8 @@ core.Class('kanso.Resource', {
         },
 
         /**
-         * Tell the resource that is should be terminated/destroyed. Executes cleanup logic.
+         * Tell the resource that is should be terminated/destroyed. Executes
+         * cleanup logic.
          */
         terminate: function () {
            // Override for resource-specific cleanup logic.

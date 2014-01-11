@@ -150,6 +150,15 @@ core.Class('kanso.IdentityMap', {
         };
 
         /**
+         * {[Boolean, String]} Adds a resource from a resource config.
+         */
+        this.addViaConfig = function (resourceConfig) {
+            var resource = new this.__resourceCtor(resourceConfig);
+            var wasAdded = this.add(resource);
+            return [wasAdded, resource];
+        };
+
+        /**
          * {kanso.Resource} Create a new ghost(unpopulated) resource with the
          * given @id {String}.
          */

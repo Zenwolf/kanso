@@ -27,8 +27,8 @@ core.Class('kanso.EventedResource', {
 
     members: {
         /**
-         * Override to allow an event to be fired after a property value is changed.
-         * See {kanso.Resource#set}.
+         * Override to allow an event to be fired after a property value is
+         * changed. See {kanso.Resource#set}.
          */
         set: function (name, value) {
             var oldVal = kanso.Resource.prototype.set.call(this, name, value);
@@ -57,7 +57,10 @@ core.Class('kanso.EventedResource', {
          * See {kanso.Resource#terminate}.
          */
         terminate: function () {
-            this.emit( this.__events__.TERMINATED, this.__createTerminatedEvent() );
+            this.emit(
+                this.__events__.TERMINATED,
+                this.__createTerminatedEvent() );
+
             this.clearListeners();
         },
 
