@@ -2,7 +2,7 @@
  * The identity map that manages resources via priviledged methods that are the
  * only methods with access to a private resource map.
  */
-core.Class('kanso.IdentityMap', {
+core.Class('kanso.data.IdentityMap', {
 
     events: {
         RESOURCE_CREATED:   'RESOURCE_CREATED',
@@ -27,14 +27,14 @@ core.Class('kanso.IdentityMap', {
         this.__emitter = emitter || null;
 
         /** {=Object} */
-        this.__events__ = core.Class.getEvents(kanso.IdentityMap);
+        this.__events__ = core.Class.getEvents(kanso.data.IdentityMap);
 
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
         // Priviledged methods that need to access the resource map.
         // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
         /**
-         * {kanso.Resource} Get a resource via its @id {String}.
+         * {kanso.data.Resource} Get a resource via its @id {String}.
          */
         this.get = function (id) {
             var resource = null;
@@ -63,7 +63,7 @@ core.Class('kanso.IdentityMap', {
         };
 
         /**
-         * {Array[kanso.Resource]} Get a list of resources from an @ids {Array}.
+         * {Array[kanso.data.Resource]} Get a list of resources from an @ids {Array}.
          */
         this.getList = function (ids) {
             var resources = [];
@@ -82,7 +82,7 @@ core.Class('kanso.IdentityMap', {
         };
 
         /**
-         * {Array[kanso.Resource]} Get all currently loaded resources.
+         * {Array[kanso.data.Resource]} Get all currently loaded resources.
          */
         this.getAll = function () {
             var resources = [];
@@ -102,7 +102,7 @@ core.Class('kanso.IdentityMap', {
         };
 
         /**
-         * {Boolean} Add a @resource {kanso.Resource} to the map.
+         * {Boolean} Add a @resource {kanso.data.Resource} to the map.
          */
         this.add = function (resource) {
             // Make sure it is a string.
@@ -122,7 +122,7 @@ core.Class('kanso.IdentityMap', {
         };
 
         /**
-         * {kanso.Resource} Remove a resource from the map by @id {String}.
+         * {kanso.data.Resource} Remove a resource from the map by @id {String}.
          */
         this.remove = function (id) {
             var resource = null;
@@ -159,7 +159,7 @@ core.Class('kanso.IdentityMap', {
         };
 
         /**
-         * {kanso.Resource} Create a new ghost(unpopulated) resource with the
+         * {kanso.data.Resource} Create a new ghost(unpopulated) resource with the
          * given @id {String}.
          */
         this.__create = function (id) {
@@ -194,14 +194,14 @@ core.Class('kanso.IdentityMap', {
         },
 
         /**
-         * {Object} Use the @resource {kanso.Resource} to create an event.
+         * {Object} Use the @resource {kanso.data.Resource} to create an event.
          */
         __createResourceCreatedEvent: function (resource) {
             return this.__createEvent(this.__events__.RESOURCE_CREATED, resource);
         },
 
         /**
-         * {Object} Use the @resource {kanso.Resource} to create an event.
+         * {Object} Use the @resource {kanso.data.Resource} to create an event.
          */
         __createResourceRemovedEvent: function (resource) {
             return this.__createEvent(this.__events__.RESOURCE_REMOVED, resource);

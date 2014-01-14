@@ -1,10 +1,10 @@
 /**
  * A resource with events.
  */
-core.Class('kanso.EventedResource', {
+core.Class('kanso.data.EventedResource', {
 
     include: [
-        kanso.Resource,
+        kanso.data.Resource,
         kokou.Emitter
     ],
 
@@ -15,23 +15,23 @@ core.Class('kanso.EventedResource', {
     },
 
     /**
-     * Accepts the {kanso.Resource} @config {Map}.
+     * Accepts the {kanso.data.Resource} @config {Map}.
      */
     construct: function (config) {
-        kanso.Resource.call(this, config);
+        kanso.data.Resource.call(this, config);
         kokou.Emitter.call(this);
 
         /** {=Object} */
-        this.__events__ = core.Class.getEvents(kanso.EventedResource);
+        this.__events__ = core.Class.getEvents(kanso.data.EventedResource);
     },
 
     members: {
         /**
          * Override to allow an event to be fired after a property value is
-         * changed. See {kanso.Resource#set}.
+         * changed. See {kanso.data.Resource#set}.
          */
         set: function (name, value) {
-            var oldVal = kanso.Resource.prototype.set.call(this, name, value);
+            var oldVal = kanso.data.Resource.prototype.set.call(this, name, value);
 
             if (oldVal) {
                 this.emit( this.__events__.PROPERTY_CHANGE,
@@ -41,10 +41,10 @@ core.Class('kanso.EventedResource', {
 
         /**
          * Override to allow an event to be fired after data is loaded.
-         * See {kanso.Resource#setLoaded}.
+         * See {kanso.data.Resource#setLoaded}.
          */
         setLoaded: function () {
-            var wasSet = kanso.Resource.prototype.setLoaded.call(this);
+            var wasSet = kanso.data.Resource.prototype.setLoaded.call(this);
 
             if (wasSet) {
                 this.emit( this.__events__.DATA_LOADED,
@@ -54,7 +54,7 @@ core.Class('kanso.EventedResource', {
 
         /**
          * Override to allow an event to be fired after data is loaded.
-         * See {kanso.Resource#terminate}.
+         * See {kanso.data.Resource#terminate}.
          */
         terminate: function () {
             this.emit(
@@ -93,8 +93,8 @@ core.Class('kanso.EventedResource', {
     }
 });
 
-core.Main.addStatics('kanso.EventedResource', {
+core.Main.addStatics('kanso.data.EventedResource', {
     fromJSON: function (txt) {
-        return kanso.Resource.fromJSON.call(this, txt);
+        return kanso.data.Resource.fromJSON.call(this, txt);
     }
 });

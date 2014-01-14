@@ -3,7 +3,7 @@
  * it. It uses a key/value model and it can be serialized/deserialized to/from
  * JSON.
  */
-core.Class('kanso.Resource', {
+core.Class('kanso.data.Resource', {
     /**
      * Create a generic resource from a @config {Object}.
      *   - @config.type {String}
@@ -11,7 +11,7 @@ core.Class('kanso.Resource', {
      */
     construct: function (config) {
         config = config || core.Main.createDict();
-        kanso.Resource.count += 1;
+        kanso.data.Resource.count += 1;
 
         /** {=Boolean} True if the resource data object is initialized. */
         this.__isInit = false;
@@ -58,7 +58,7 @@ core.Class('kanso.Resource', {
             });
 
             if ( !o[idKey] ) {
-                o[idKey] = this.__type + kanso.Resource.count;
+                o[idKey] = this.__type + kanso.data.Resource.count;
             }
 
             this._data = o;
@@ -171,7 +171,7 @@ core.Class('kanso.Resource', {
     }
 });
 
-core.Main.addStatics('kanso.Resource', {
+core.Main.addStatics('kanso.data.Resource', {
     // Instance count.
     count: 0,
 
