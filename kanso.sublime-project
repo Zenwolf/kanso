@@ -3,7 +3,10 @@
     [
         {
             "path": "./",
-            "folder_exclude_patterns": ["node_modules", ".jasy", "api"],
+            "folder_exclude_patterns": [
+                "lib",
+                "node_modules"
+            ],
             "file_exclude_patterns": ["*.sublime-workspace"]
         }
     ]

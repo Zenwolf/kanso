@@ -1,0 +1,38 @@
+{
+  "name": "kanso",
+  "version": "0.0.1",
+  "private": true,
+  "description": "A light-weight unidirectional, isolated-state app system.",
+  "main": "lib",
+  "dependencies": {
+    "immutable": "^3.7.4",
+    "object-assign": "^3.0.0"
+  },
+  "devDependencies": {
+    "babel": "^5.6.14",
+    "eslint": "^0.24.0",
+    "mocha": "^2.2.5"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Zenwolf/kanso.git"
+  },
+  "author": "Matthew Jaquish <mattjaq@yahoo.com>",
+  "license": "Apache 2",
+  "bugs": {
+    "url": "https://github.com/Zenwolf/kanso/issues"
+  },
+  "homepage": "https://github.com/Zenwolf/kanso#readme",
+  "scripts": {
+    "build": "npm run clean && npm run mkdirs && npm run build-js",
+    "build-js": "babel src --out-dir lib",
+    "clean": "rm -rf lib",
+    "lint": "eslint ./src ./test",
+    "mkdirs": "mkdir -p lib assets/css",
+    "test": "npm run test-debug && npm run test-prod",
+    "test-base": "mocha --compilers js:babel/register -R tap --recursive",
+    "test-debug": "NODE_ENV=development npm run test-base",
+    "test-prod": "NODE_ENV=production npm run test-base",
+    "verify": "npm run lint && npm run test"
+  }
+}
