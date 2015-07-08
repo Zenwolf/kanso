@@ -2,7 +2,7 @@ import assert from 'assert';
 import QueryAPI from '../src/QueryAPI';
 
 describe('QueryAPI', () => {
-    const state = {
+    const testState = {
         name: 'foo',
         things: [
             { id: 'thing1', name: 'Zork' },
@@ -12,7 +12,7 @@ describe('QueryAPI', () => {
 
     const config = {
         validateState: function(s) {
-            if (s !== state) {
+            if (s !== testState) {
                 throw new Error('Invalid state');
             }
         },
@@ -42,7 +42,7 @@ describe('QueryAPI', () => {
 
     beforeEach(() => {
         TestAPI = QueryAPI(config);
-        api = TestAPI(state);
+        api = TestAPI(testState);
     });
 
     it('should create a stateless API function', () => {
@@ -66,19 +66,19 @@ describe('QueryAPI', () => {
     });
 
     it('should return a name from the stateless queries', () => {
-        assert(TestAPI.getName(state) === state.name);
+        assert(TestAPI.getName(testState) === testState.name);
     });
 
     it('should return a name from the stateful queries', () => {
-        assert(api.getName() === state.name);
+        assert(api.getName() === testState.name);
     });
 
     it('should return a thing by ID from the stateless queries', () => {
-        assert(TestAPI.getThingById(state, 'thing1') === state.things[0]);
+        assert(TestAPI.getThingById(testState, 'thing1') === testState.things[0]);
     });
 
     it('should return a thing by ID from the stateful queries', () => {
-        assert(api.getThingById('thing1') === state.things[0]);
+        assert(api.getThingById('thing1') === testState.things[0]);
     });
 
     it('should provide validateState on stateless API', () => {

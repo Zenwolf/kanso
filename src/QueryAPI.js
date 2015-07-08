@@ -3,7 +3,6 @@
  * Apache 2.0 License
  */
 
-import assign from 'object-assign';
 import CustomError from './CustomError';
 
 /**
@@ -32,8 +31,9 @@ export default function QueryAPI({
         validateState(state);
         return keys.reduce((api, key) => {
             api[key] = function(...args) {
-                return queries[key](...[state, ...args])
-            }
+                return queries[key](...[state, ...args]);
+            };
+
             return api;
         }, {});
     };
@@ -44,7 +44,8 @@ export default function QueryAPI({
         apiFn[key] = function(state, ...args) {
             validateState(state);
             return queries[key](...[state, ...args]);
-        }
+        };
+
         return apiFn;
     }, fn);
 }

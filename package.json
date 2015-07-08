@@ -5,7 +5,6 @@
   "description": "Light-weight, unidirectional, isolated-state app tools.",
   "main": "lib",
   "dependencies": {
-    "color": "^0.10.1",
     "immutable": "^3.7.4",
     "object-assign": "^3.0.0"
   },

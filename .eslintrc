@@ -14,7 +14,7 @@
         "new-cap": [0],
         "no-alert": [0],
         "no-console": [2],
-        "no-multi-spaces": [2, { "align": "value" }],
+        "no-multi-spaces": [2],
         "no-sequences": [0],
         "no-trailing-spaces": [2],
         "no-underscore-dangle": [0],

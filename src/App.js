@@ -4,7 +4,6 @@
  */
 
 import assign from 'object-assign';
-import Immutable from 'immutable';
 
 export default class App {
 
