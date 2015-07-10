@@ -12,9 +12,9 @@ function stateReducer(action, state, stateTransformer, key) {
  * based on the action.
  *
  * @param {Immutable.Map} initialState
- * @param {Array<Function>} transformers
+ * @param {Immutable.Map<string, Function>} transformers
  * @param {Object} action
- * @return {Immutable.Map}
+ * @return {Immutable.Map} the next state
  */
 export default function reduceState(initialState, transformers, action) {
     return transformers.reduce(stateReducer.bind(null, action), initialState);

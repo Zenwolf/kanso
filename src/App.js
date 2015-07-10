@@ -29,6 +29,7 @@ export default class App {
         let isFlushing = false;
         // let flushTimerId = null;
         let pendingActions = [];
+        let listeners = Immutable.List();
 
         function flush() {
             const actions = pendingActions;
@@ -55,7 +56,15 @@ export default class App {
              * @type {Immutable.List<Function>}
              */
             actionInterceptors: {
+                enumerable: true,
                 get: () => data.actionInterceptors
+            },
+
+            addListener: {
+                enumerable: true,
+                value: listener => listeners.includes(listener) ?
+                    listeners :
+                    listeners = listeners.push(listener)
             },
 
             /**
@@ -64,13 +73,23 @@ export default class App {
              * @return {Object}
              */
             api: {
+                enumerable: true,
                 get: () => data.api
             },
 
             dispatch: {
+                enumerable: true,
                 value: action => {
                     pendingActions.push(action);
                     tryToFlush();
+                }
+            },
+
+            removeListener: {
+                enumerable: true,
+                value: listener => {
+                    const index = listeners.indexOf(listener);
+                    return index > -1 ? listeners.delete(index) : listeners;
                 }
             },
 
@@ -78,6 +97,7 @@ export default class App {
              * @type {Immutable.Map<string, *>}
              */
             state: {
+                enumerable: true,
                 get: () => data.state
             },
 
@@ -85,6 +105,7 @@ export default class App {
              * @type {Immutable.List<Function>}
              */
             stateTransformers: {
+                enumerable: true,
                 get: () => data.stateTransformers
             },
 
@@ -93,6 +114,7 @@ export default class App {
              * @return {Function}
              */
             staticAPI: {
+                enumerable: true,
                 get: () => data.staticAPI
             }
         });

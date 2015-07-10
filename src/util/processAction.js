@@ -19,7 +19,7 @@ export default function processAction(data, action) {
     // Although it is possible to use one long functions-in-functions call here,
     // we use vars to increase the readability.
     const {actionInterceptors, state, stateTransformers} = data;
-    const executeInterceptors = composeFnsWithVals(actionInterceptors);
+    const executeInterceptors = composeFnsWithVals(...actionInterceptors);
     const interceptedAction = executeInterceptors(action);
     const nextState = reduceState(state, stateTransformers, interceptedAction);
     const nextData = setState(data, nextState);

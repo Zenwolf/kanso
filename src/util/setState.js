@@ -18,11 +18,12 @@ export default function setState(data, nextState) {
     }
 
     // Execute the state interceptor chain before updating the data.
-    const executeInterceptors = composeFnsWithVals(data.stateInterceptors);
+    const {stateInterceptors, staticAPI} = data;
+    const executeInterceptors = composeFnsWithVals(...stateInterceptors);
     const interceptedState = executeInterceptors(nextState);
 
     return data.withMutations(map => {
         map.set('state', interceptedState)
-            .set('api', data.staticAPI(interceptedState));
+            .set('api', staticAPI(interceptedState));
     });
 }
