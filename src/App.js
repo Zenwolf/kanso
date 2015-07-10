@@ -3,19 +3,89 @@
  * Apache 2.0 License
  */
 
-import assign from 'object-assign';
+import AppDataRecord from './AppDataRecord';
+import Immutable from 'immutable';
+import processAction from './util/processAction';
 
 export default class App {
-
     constructor({
-
-        domains = [],
-        middleware = []
+        AppAPI = null,
+        actionInterceptors = [],
+        initialState = {},
+        stateInterceptors = [],
+        stateTransformers = {}
     } = {}) {
-        assign(this, {
+        let _state = Immutable.Map(initialState);
 
+        let data = new AppDataRecord({
+            actionInterceptors: Immutable.List(actionInterceptors),
+            api: AppAPI(_state),
+            state: _state,
+            stateInterceptors: Immutable.List(stateInterceptors),
+            stateTransformers: Immutable.Map(stateTransformers),
+            staticAPI: AppAPI
+        });
+
+        let isFlushing = false;
+        // let flushTimerId = null;
+        let pendingActions = [];
+
+        function flush() {
+            const actions = pendingActions;
+            isFlushing = true;
+            pendingActions = [];
+            actions.forEach(action => data = processAction(data, action));
+            // flushTimerId = null;
+            isFlushing = false;
+        }
+
+        function tryToFlush() {
+            if (isFlushing) {
+                // flushTimerId = setTimeout(tryToFlush, 16);
+                setTimeout(tryToFlush, 16);
+                return;
+            }
+
+            // flushTimerId = null;
+            flush();
+        }
+
+        Object.defineProperties(this, {
+            actionInterceptors: {
+                get: () => data.actionInterceptors
+            },
+
+            /**
+             * Get the stateful API snapshot that is bound to the current
+             * app state.
+             * @return {Object}
+             */
+            api: {
+                get: () => data.api
+            },
+
+            dispatch: {
+                value: action => {
+                    pendingActions.push(action);
+                    tryToFlush();
+                }
+            },
+
+            state: {
+                get: () => data.state
+            },
+
+            stateTransformers: {
+                get: () => data.stateTransformers
+            },
+
+            /**
+             * Get the stateless, static API.
+             * @return {Function}
+             */
+            staticAPI: {
+                get: () => data.staticAPI
+            }
         });
     }
-
-
 }
