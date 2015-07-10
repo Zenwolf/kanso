@@ -8,9 +8,9 @@ import composeFnsWithVals from './composeFnsWithVals';
 /**
  * Sets the state into the data and updates the api if the state is new.
  *
- * @param {Immutable.Map} data
+ * @param {AppDataRecord} data
  * @param {Immutable.Map} nextState
- * @return {Immutable.Map} The new data
+ * @return {AppDataRecord} The new data
  */
 export default function setState(data, nextState) {
     if (nextState === data.state) {

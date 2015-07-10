@@ -11,9 +11,9 @@ import setState from './setState';
  * Creates a new set of data based on an action. Executes the action interceptor
  * chain before operating on state.
  *
- * @param {Immutable.Map} data
+ * @param {AppDataRecord} data
  * @param {Object} action
- * @return {Immutable.Map} the new data
+ * @return {AppDataRecord} the new data
  */
 export default function processAction(data, action) {
     // Although it is possible to use one long functions-in-functions call here,

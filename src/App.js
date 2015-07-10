@@ -51,6 +51,9 @@ export default class App {
         }
 
         Object.defineProperties(this, {
+            /**
+             * @type {Immutable.List<Function>}
+             */
             actionInterceptors: {
                 get: () => data.actionInterceptors
             },
@@ -71,10 +74,16 @@ export default class App {
                 }
             },
 
+            /**
+             * @type {Immutable.Map<string, *>}
+             */
             state: {
                 get: () => data.state
             },
 
+            /**
+             * @type {Immutable.List<Function>}
+             */
             stateTransformers: {
                 get: () => data.stateTransformers
             },
