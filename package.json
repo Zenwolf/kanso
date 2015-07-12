@@ -30,7 +30,7 @@
     "lint": "eslint ./src ./test",
     "mkdirs": "mkdir -p lib assets/css",
     "test": "npm run test-debug && npm run test-prod",
-    "test-base": "mocha --compilers js:babel/register -R tap --recursive",
+    "test-base": "mocha --compilers js:babel/register -R tap --recursive test/spec",
     "test-debug": "NODE_ENV=development npm run test-base",
     "test-prod": "NODE_ENV=production npm run test-base",
     "verify": "npm run lint && npm run test"

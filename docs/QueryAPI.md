@@ -56,7 +56,7 @@ We create an API:
         },
         
         validateState(state) {
-            if (state !== myState) {
+            if (!(state instanceof MyState)) {
                 throw new Error('Invalid state.');
             }
         }
@@ -71,7 +71,7 @@ How to use your new API
 You can use the API is two ways:
 
 1. _Stateless with pure static functions._ This is useful when the state is owned externally and will be passed into the query functions.
-2. _Stateful with functions bound to a specific state instance._ This is useful if you want to create a specific instance of the API bound to a specific state snapshot, and pass it to some other part of the app without worrying about it changing or being effected in any way. For example, passing the current state+API to the rendering layer.
+2. _Stateful with functions bound to a specific state instance._ This is useful if you want to create a specific instance of the API bound to a specific state snapshot, and pass it to some other part of the app without worrying about it changing or being effected in any way(this is easy if you are using immutable data structures). For example, passing the current state+API to the rendering layer.
 
 The examples below build upon the `MyAPI` we built above.
 

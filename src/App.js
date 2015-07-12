@@ -26,29 +26,41 @@ export default class App {
             staticAPI: AppAPI
         });
 
-        let isFlushing = false;
-        // let flushTimerId = null;
+        let isDispatching = false;
         let pendingActions = [];
-        let listeners = Immutable.List();
+        let changeListeners = Immutable.List();
 
-        function flush() {
-            const actions = pendingActions;
-            isFlushing = true;
-            pendingActions = [];
-            actions.forEach(action => data = processAction(data, action));
-            // flushTimerId = null;
-            isFlushing = false;
+        function visitAction(action) {
+            data = processAction(data, action);
         }
 
-        function tryToFlush() {
-            if (isFlushing) {
-                // flushTimerId = setTimeout(tryToFlush, 16);
-                setTimeout(tryToFlush, 16);
+        function visitListener(listener) {
+            listener();
+        }
+
+        function dispatchActions() {
+            const initialData = data;
+            const actions = pendingActions;
+            pendingActions = [];
+
+            isDispatching = true;
+            actions.forEach(visitAction);
+
+            // If the data changes, call all change listeners.
+            if (data !== initialData) {
+                changeListeners.forEach(visitListener);
+            }
+
+            isDispatching = false;
+        }
+
+        function tryToDispatch() {
+            if (isDispatching) {
+                setTimeout(tryToDispatch, 16);
                 return;
             }
 
-            // flushTimerId = null;
-            flush();
+            dispatchActions();
         }
 
         Object.defineProperties(this, {
@@ -60,11 +72,11 @@ export default class App {
                 get: () => data.actionInterceptors
             },
 
-            addListener: {
+            addChangeListener: {
                 enumerable: true,
-                value: listener => listeners.includes(listener) ?
-                    listeners :
-                    listeners = listeners.push(listener)
+                value: listener => changeListeners.includes(listener) ?
+                    changeListeners :
+                    changeListeners = changeListeners.push(listener)
             },
 
             /**
@@ -81,15 +93,15 @@ export default class App {
                 enumerable: true,
                 value: action => {
                     pendingActions.push(action);
-                    tryToFlush();
+                    tryToDispatch();
                 }
             },
 
-            removeListener: {
+            removeChangeListener: {
                 enumerable: true,
                 value: listener => {
-                    const index = listeners.indexOf(listener);
-                    return index > -1 ? listeners.delete(index) : listeners;
+                    const index = changeListeners.indexOf(listener);
+                    return index > -1 ? changeListeners.delete(index) : changeListeners;
                 }
             },
 

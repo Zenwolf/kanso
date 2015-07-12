@@ -1,5 +1,5 @@
 import assert from 'assert';
-import QueryAPI from '../src/QueryAPI';
+import QueryAPI from '../../src/QueryAPI';
 
 describe('QueryAPI', () => {
     const testState = {

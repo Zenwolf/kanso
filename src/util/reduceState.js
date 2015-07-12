@@ -3,8 +3,10 @@
  * Apache 2.0 License
  */
 
+import {ERROR_VALIDATION} from '../ErrorConstants';
+
 function stateReducer(action, state, stateTransformer, key) {
-    return state.set(key, stateTransformer(state[key], action));
+    return state.set(key, stateTransformer(state.get(key), action));
 }
 
 /**
@@ -17,5 +19,18 @@ function stateReducer(action, state, stateTransformer, key) {
  * @return {Immutable.Map} the next state
  */
 export default function reduceState(initialState, transformers, action) {
+    validateState(initialState);
     return transformers.reduce(stateReducer.bind(null, action), initialState);
+}
+
+function validateState(state) {
+    if (typeof state !== 'object' && !Array.isArray(state)) {
+        throwErr('state must be an object.');
+    }
+}
+
+function throwErr(msg) {
+    const err = new Error(msg);
+    err.name = ERROR_VALIDATION;
+    throw err;
 }

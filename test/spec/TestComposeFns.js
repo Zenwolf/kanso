@@ -1,5 +1,5 @@
 import assert from 'assert';
-import composeFns from '../src/util/composeFns';
+import composeFns from '../../src/util/composeFns';
 import Immutable from 'immutable';
 
 let isDone = false;

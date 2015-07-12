@@ -1,5 +1,5 @@
 import assert from 'assert';
-import CustomError from '../src/CustomError';
+import CustomError from '../../src/CustomError';
 
 function FooError(msg) {
     CustomError.call(this, 'FooError', msg);

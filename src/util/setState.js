@@ -3,7 +3,7 @@
  * Apache 2.0 License
  */
 
-import composeFnsWithVals from './composeFnsWithVals';
+import composeFns from './composeFns';
 
 /**
  * Sets the state into the data and updates the api if the state is new.
@@ -19,8 +19,12 @@ export default function setState(data, nextState) {
 
     // Execute the state interceptor chain before updating the data.
     const {stateInterceptors, staticAPI} = data;
-    const executeInterceptors = composeFnsWithVals(...stateInterceptors);
-    const interceptedState = executeInterceptors(nextState);
+    let interceptedState = nextState;
+
+    if (!stateInterceptors.isEmpty()) {
+        const executeInterceptors = composeFns(...stateInterceptors);
+        interceptedState = executeInterceptors(nextState);
+    }
 
     return data.withMutations(map => {
         map.set('state', interceptedState)

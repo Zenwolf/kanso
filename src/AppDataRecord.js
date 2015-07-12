@@ -7,7 +7,10 @@ import Immutable from 'immutable';
 
 export default Immutable.Record({
 
-    /** @type {Immutable.List<Function>} */
+    /**
+     * @type {Immutable.List<Function>} List of functions:
+     *     action => action
+     */
     actionInterceptors: Immutable.List(),
 
     /** @type {Object} stateful api from using your CustomAPI() */
@@ -16,12 +19,18 @@ export default Immutable.Record({
     /** @type {Immutable.Map<string, *>} */
     state: Immutable.Map(),
 
-    /** @type {Immutable.List<Function>} */
+    /**
+     * @type {Immutable.List<Function>} List of functions:
+     *     state => state
+     */
     stateInterceptors: Immutable.List(),
 
-    /** @type {Immutable.Map<string, Function>} */
+    /**
+     * @type {Immutable.Map<string, Function>} Map of functions:
+     *     (state, action) => state
+     */
     stateTransformers: Immutable.Map(),
 
-    /** @type {Object} stateless api from using QueryAPI() */
+    /** @type {Function} API factory from using QueryAPI() */
     staticAPI: null
 });

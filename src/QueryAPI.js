@@ -3,7 +3,7 @@
  * Apache 2.0 License
  */
 
-import CustomError from './CustomError';
+import {ERROR_QUERY_API} from './ErrorConstants';
 
 /**
  * Creates an API object that queries a specific state for data.
@@ -16,7 +16,7 @@ import CustomError from './CustomError';
  * @param {Function} options.validateState -- a function that performs
  *     validation on the provided state.
  *
- * @return {Object} API object with the queries
+ * @return {Function} API object factory with the static queries
  */
 export default function QueryAPI({
     queries = null,
@@ -50,12 +50,6 @@ export default function QueryAPI({
     }, fn);
 }
 
-export function QueryAPIError(message) {
-    CustomError.call(this, 'QueryAPIError', message);
-}
-
-QueryAPIError.prototype = CustomError.prototype;
-
 function validateQueries(queries) {
     if (!queries || (typeof queries !== 'object') || Array.isArray(queries)) {
         throwErr('Invalid queries object.');
@@ -69,5 +63,7 @@ function validateStateFn(fn) {
 }
 
 function throwErr(msg) {
-    throw new QueryAPIError(msg);
+    const err = new Error(msg);
+    err.name = ERROR_QUERY_API;
+    throw err;
 }

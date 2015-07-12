@@ -3,7 +3,9 @@
  * Apache 2.0 License
  */
 
-import composeFnsWithVals from './composeFnsWithVals';
+import AppDataRecord from '../AppDataRecord';
+import composeFns from './composeFns';
+import {ERROR_VALIDATION} from '../ErrorConstants';
 import reduceState from './reduceState';
 import setState from './setState';
 
@@ -16,12 +18,31 @@ import setState from './setState';
  * @return {AppDataRecord} the new data
  */
 export default function processAction(data, action) {
+    validateAppData(data);
+
     // Although it is possible to use one long functions-in-functions call here,
     // we use vars to increase the readability.
     const {actionInterceptors, state, stateTransformers} = data;
-    const executeInterceptors = composeFnsWithVals(...actionInterceptors);
-    const interceptedAction = executeInterceptors(action);
+    let interceptedAction = action;
+
+    if (!actionInterceptors.isEmpty()) {
+        const executeInterceptors = composeFns(...actionInterceptors);
+        interceptedAction = executeInterceptors(action);
+    }
+
     const nextState = reduceState(state, stateTransformers, interceptedAction);
     const nextData = setState(data, nextState);
     return nextData;
+}
+
+function validateAppData(data) {
+    if (!(data instanceof AppDataRecord)) {
+        throwErr('data of type AppDataRecord is required.');
+    }
+}
+
+function throwErr(msg) {
+    const err = new Error(msg);
+    err.name = ERROR_VALIDATION;
+    throw err;
 }
