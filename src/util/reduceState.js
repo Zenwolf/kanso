@@ -24,7 +24,7 @@ export default function reduceState(initialState, transformers, action) {
 }
 
 function validateState(state) {
-    if (typeof state !== 'object' && !Array.isArray(state)) {
+    if (typeof state !== 'object' || Array.isArray(state)) {
         throwErr('state must be an object.');
     }
 }

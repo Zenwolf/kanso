@@ -1,14 +1,14 @@
 QueryAPI
 ============================================================
 
-Creates an API object that queries a specific state for data.
+Creates an API factory function that queries a specific state for values.
 
 Queries
 ------------------------------------------------------------
 
 Queries are functions that query data from a particular state. Each query function has a basic signature:
 
-    state => data
+    state => value
 
 The `state` must always be the first argument to a query function. You can always add additional args after the state if you need them.
 
@@ -56,7 +56,7 @@ We create an API:
         },
         
         validateState(state) {
-            if (!(state instanceof MyState)) {
+            if (!state.name || !Array.isArray(state.things)) {
                 throw new Error('Invalid state.');
             }
         }

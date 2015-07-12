@@ -6,7 +6,7 @@
 import {ERROR_QUERY_API} from './ErrorConstants';
 
 /**
- * Creates an API object that queries a specific state for data.
+ * Creates an API factory function that queries a specific state for data.
  * See: {@link ../docs/QueryAPI.md}
  *
  * @param {Object} options.queries -- contains all the functions that query data
@@ -51,8 +51,8 @@ export default function QueryAPI({
 }
 
 function validateQueries(queries) {
-    if (!queries || (typeof queries !== 'object') || Array.isArray(queries)) {
-        throwErr('Invalid queries object.');
+    if ((typeof queries !== 'object') || Array.isArray(queries)) {
+        throwErr('queries must be an object.');
     }
 }
 
