@@ -24,6 +24,21 @@ Kanso's logic design is heavily-inspired by Domain Driven Design and CQRS.
 Build
 ------------------------------------------------------------
 
+### Code generation
 Kanso is written in ES6 and uses Babel to generate ES5 JS code. You run a build command to generate the resulting library from `src` into the `lib` folder.
 
     npm run build
+
+### Code linting
+Kanso uses eslint to lint code.
+
+    npm run lint
+
+### Run tests
+Kanso uses mocha for unit tests.
+
+    npm test
+
+### Run verification (lint + test)
+
+    npm run verify
