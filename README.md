@@ -16,7 +16,7 @@ Overview
 ------------------------------------------------------------
 
 ### Encapsulated state
-Kanso focuses on encapsulating state and logic, separating them from the UI layer. State is maintained in a single place and can be passed into another systesm for processing
+Kanso focuses on encapsulating state and logic, separating them from the UI layer. State is maintained in a single place and can be passed into another system for processing
 or rendering.
 
 ### No Defined UI layer
@@ -136,7 +136,7 @@ _Example using React with App#render and app state:_
         }
     }
 
-_Example using React with app api:_
+_Example using React with a change listener and app api:_
 
     listener(app) {
         React.render(
@@ -145,7 +145,7 @@ _Example using React with app api:_
         );
     }
 
-_Example using React with app state:_
+_Example using React with a change listener and app state:_
 
     listener(app) {
         React.render(
