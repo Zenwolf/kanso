@@ -63,7 +63,7 @@ UI Strategies
 Since Kanso manages a single state for the entire application, your UI will need to accept this object and use it as you see fit. There are several ways you can do this.
 
 ### Leverage the App#render function
-By default, the `App#render` function does nothing. You can override the `App#render` function to call your UI. This function is called after app data has changed and after all change listeners are called.
+By default, the `App#render` function does nothing. You can override the `App#render` function to call your UI. This function is only called after app data has changed and all change listeners have completed.
 
 _Example of overridding App#render and using app api:_
 

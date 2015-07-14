@@ -8,6 +8,8 @@ import {ERROR_APP} from './ErrorConstants';
 import Immutable from 'immutable';
 import reduceData from './util/reduceData';
 
+const DISPATCH_DELAY = 16; // milliseconds
+
 export default class App {
     constructor({
         actionInterceptors = [],
@@ -35,9 +37,7 @@ export default class App {
         let pendingActions = [];
         let changeListeners = Immutable.List();
 
-        const visitListener = listener => {
-            listener(this);
-        };
+        const visitListener = listener => listener(this);
 
         const dispatchActions = () => {
             // console.log('#dispatchActions...');
@@ -65,7 +65,7 @@ export default class App {
             // console.log('#tryToDispatch...');
 
             if (isDispatching) {
-                setTimeout(tryToDispatch, 16);
+                setTimeout(tryToDispatch, DISPATCH_DELAY);
                 return;
             }
 
@@ -117,7 +117,9 @@ export default class App {
                 enumerable: true,
                 value: listener => {
                     const index = changeListeners.indexOf(listener);
-                    return index > -1 ? changeListeners.delete(index) : changeListeners;
+                    return index > -1 ?
+                        changeListeners.delete(index) :
+                        changeListeners;
                 }
             },
 
@@ -128,8 +130,8 @@ export default class App {
                     // Override to implement your own UI layer. For example,
                     // if using React, you could render your top-level
                     // component here and pass in the current api or state.
-                    // When the appData changes, the UI can be re-rendered with the
-                    // newly updated api or state.
+                    // When the appData changes, the UI can be re-rendered with
+                    // the newly updated api or state.
                 }
             },
 

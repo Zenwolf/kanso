@@ -13,7 +13,7 @@ export default Immutable.Record({
      */
     actionInterceptors: Immutable.List(),
 
-    /** @type {Object} stateful api from using your CustomAPI() */
+    /** @type {Object} stateful api from using your CustomAPI(state) */
     api: null,
 
     /** @type {Immutable.Map<string, *>} */
