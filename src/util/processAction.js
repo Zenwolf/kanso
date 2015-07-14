@@ -18,6 +18,7 @@ import setState from './setState';
  * @return {AppDataRecord} the new data
  */
 export default function processAction(data, action) {
+    // console.log('Processing action: %j', action);
     validateAppData(data);
 
     // Although it is possible to use one long functions-in-functions call here,
@@ -26,10 +27,12 @@ export default function processAction(data, action) {
     let interceptedAction = action;
 
     if (!actionInterceptors.isEmpty()) {
+        // console.log('Executing actionInterceptors...');
         const executeInterceptors = composeFns(...actionInterceptors);
         interceptedAction = executeInterceptors(action);
     }
 
+    // console.log('Intercepted action: %j', interceptedAction);
     const nextState = reduceState(state, stateTransformers, interceptedAction);
     const nextData = setState(data, nextState);
     return nextData;

@@ -13,7 +13,9 @@ import composeFns from './composeFns';
  * @return {AppDataRecord} The new data
  */
 export default function setState(data, nextState) {
+    // console.log('Setting state...');
     if (nextState === data.state) {
+        // console.log('Returning unchanged state...');
         return data;
     }
 
@@ -22,6 +24,7 @@ export default function setState(data, nextState) {
     let interceptedState = nextState;
 
     if (!stateInterceptors.isEmpty()) {
+        // console.log('Executing stateInterceptors...');
         const executeInterceptors = composeFns(...stateInterceptors);
         interceptedState = executeInterceptors(nextState);
     }

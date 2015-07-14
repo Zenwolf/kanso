@@ -4,20 +4,25 @@
  */
 
 import AppDataRecord from './AppDataRecord';
+import {ERROR_APP} from './ErrorConstants';
 import Immutable from 'immutable';
-import processAction from './util/processAction';
+import reduceData from './util/reduceData';
 
 export default class App {
     constructor({
-        AppAPI = null,
         actionInterceptors = [],
+        AppAPI = null,
         initialState = {},
         stateInterceptors = [],
         stateTransformers = {}
     } = {}) {
+        if (!AppAPI) {
+            throwErr('AppAPI is required.');
+        }
+
         let _state = Immutable.Map(initialState);
 
-        let data = new AppDataRecord({
+        let appData = new AppDataRecord({
             actionInterceptors: Immutable.List(actionInterceptors),
             api: AppAPI(_state),
             state: _state,
@@ -30,38 +35,43 @@ export default class App {
         let pendingActions = [];
         let changeListeners = Immutable.List();
 
-        function visitAction(action) {
-            data = processAction(data, action);
-        }
+        const visitListener = listener => {
+            listener(this);
+        };
 
-        function visitListener(listener) {
-            listener();
-        }
+        const dispatchActions = () => {
+            // console.log('#dispatchActions...');
 
-        function dispatchActions() {
-            const initialData = data;
+            const initialData = appData;
             const actions = pendingActions;
             pendingActions = [];
 
             isDispatching = true;
-            actions.forEach(visitAction);
+            appData = reduceData(appData, actions);
+            // console.log(appData.toJS());
 
-            // If the data changes, call all change listeners.
-            if (data !== initialData) {
+            // If the appData changes, call all change listeners.
+            // console.log('Checking if appData changed...');
+            if (appData !== initialData) {
+                // console.log('appData changed...');
+                // console.log('Calling change listeners...');
                 changeListeners.forEach(visitListener);
             }
 
             isDispatching = false;
-        }
+        };
 
-        function tryToDispatch() {
+        const tryToDispatch = () => {
+            // console.log('#tryToDispatch...');
+
             if (isDispatching) {
                 setTimeout(tryToDispatch, 16);
                 return;
             }
 
             dispatchActions();
-        }
+            this.render(this);
+        };
 
         Object.defineProperties(this, {
             /**
@@ -69,7 +79,7 @@ export default class App {
              */
             actionInterceptors: {
                 enumerable: true,
-                get: () => data.actionInterceptors
+                get: () => appData.actionInterceptors
             },
 
             addChangeListener: {
@@ -86,12 +96,18 @@ export default class App {
              */
             api: {
                 enumerable: true,
-                get: () => data.api
+                get: () => appData.api
+            },
+
+            changeListeners: {
+                enumerable: true,
+                get: () => changeListeners
             },
 
             dispatch: {
                 enumerable: true,
                 value: action => {
+                    // console.log('#dispatch...');
                     pendingActions.push(action);
                     tryToDispatch();
                 }
@@ -105,12 +121,24 @@ export default class App {
                 }
             },
 
+            // Override to implement functionality.
+            render: {
+                enumerable: true,
+                value: app => {
+                    // Override to implement your own UI layer. For example,
+                    // if using React, you could render your top-level
+                    // component here and pass in the current api or state.
+                    // When the appData changes, the UI can be re-rendered with the
+                    // newly updated api or state.
+                }
+            },
+
             /**
              * @type {Immutable.Map<string, *>}
              */
             state: {
                 enumerable: true,
-                get: () => data.state
+                get: () => appData.state
             },
 
             /**
@@ -118,7 +146,7 @@ export default class App {
              */
             stateTransformers: {
                 enumerable: true,
-                get: () => data.stateTransformers
+                get: () => appData.stateTransformers
             },
 
             /**
@@ -127,8 +155,14 @@ export default class App {
              */
             staticAPI: {
                 enumerable: true,
-                get: () => data.staticAPI
+                get: () => appData.staticAPI
             }
         });
     }
+}
+
+function throwErr(msg) {
+    const err = new Error('msg');
+    err.name = ERROR_APP;
+    throw err;
 }

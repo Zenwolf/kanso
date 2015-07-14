@@ -4,5 +4,5 @@
  */
 
 export default function composeFns(...fns) {
-    return fns.reduceRight((nextFn, fn) => (...vals) => fn(...[nextFn, ...vals]));
+    return fns.reduceRight((nextFn, fn) => (...vals) => nextFn(fn(...vals)));
 }

@@ -5,10 +5,15 @@ import Immutable from 'immutable';
 let isDone = false;
 
 const steps = [
-    function step1(next) { next(); },
-    function step2(next) { next(); },
-    function step3(next) { next(); },
-    function last() { isDone = true; }
+    function step1() {},
+    function step2() {},
+    function step3() { isDone = true; }
+];
+
+const steps2 = [
+    function step1(o) { o.step1 = true; return o; },
+    function step2(o) { o.step2 = true; return o; },
+    function step3(o) { o.step3 = true; return o; }
 ];
 
 const stepsList = Immutable.List(steps);
@@ -37,5 +42,14 @@ describe('composeFns', () => {
         assert(!isDone);
         composeFns(...stepsList)();
         assert(isDone);
+    });
+
+    it('should create a function chain from an array that returns final values', () => {
+        const fn = composeFns(...steps2);
+        const result = fn({});
+        assert(result);
+        assert(result.step1);
+        assert(result.step2);
+        assert(result.step3);
     });
 });

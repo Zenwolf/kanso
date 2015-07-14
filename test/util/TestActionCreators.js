@@ -1,4 +1,11 @@
-import {ACTION_CHANGE_NAME} from './TestConstants';
+import {ACTION_CHANGE_DESC, ACTION_CHANGE_NAME} from './TestConstants';
+
+export function changeDescriptionAction(newDesc) {
+    return {
+        type: ACTION_CHANGE_DESC,
+        newDesc
+    };
+}
 
 export function changeNameAction(newName) {
     return {
@@ -6,3 +13,4 @@ export function changeNameAction(newName) {
         newName
     };
 }
+
