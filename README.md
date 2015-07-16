@@ -36,14 +36,14 @@ Kanso gives you different ways to respond to changes:
 3. Listen to data changes.
 
 ### Action Interceptors
-An action interceptor allows you to receive an action before it is used to change state. The required function signature is:
+An action interceptor is a function that allows you to receive an action before it is used to change state. The required function signature is:
 
     action => action
 
 You can return the same action, you could return a different action, or you could return a modified version of the same action. This is an extremely flexible system, hopefully allowing you to perform any number of things in response to an action.
 
 ### State Interceptors
-A state interceptor allows you to receive a new state before it is set. The required function signature is:
+A state interceptor is a function that allows you to receive a new state before it is set. The required function signature is:
 
     state => state
 

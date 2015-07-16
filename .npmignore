@@ -1,2 +1,5 @@
+*.sublime-*
+.DS_Store
 .npmrc
+coverage/*
 test/*

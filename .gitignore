@@ -1,5 +1,6 @@
 *.sublime-workspace
 .DS_Store
 .npmrc
+coverage/*
 lib/*
 node_modules/*
