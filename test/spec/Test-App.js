@@ -5,9 +5,8 @@ import createTestActionInterceptors from '../util/createTestActionInterceptors';
 import createTestAppAPI from '../util/createTestAppAPI';
 import createTestAppState from '../util/createTestAppState';
 import createTestStateStores from '../util/createTestStateStores';
-import {ERROR_APP} from '../../src/ErrorConstants';
 import Immutable from 'immutable';
-import {KEY_NAMES } from '../util/TestConstants';
+import {ERROR_APP, KEY_NAMES } from '../util/TestConstants';
 
 const actionInterceptors = createTestActionInterceptors();
 const AppApi = createTestAppAPI();
