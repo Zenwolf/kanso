@@ -4,9 +4,10 @@
  */
 
 /**
- * A factory that creates a store for state data. It returns a function that
- * processes actions and modifies the state using state transformer functions
- * that you provide.
+ * A factory that creates a stateless store for transforming state data. It
+ * returns a function that processes a given state with actions, modifies the
+ * state using state transformer functions that you provide, and returns the
+ * new state.
  *
  * State can be any value you want.
  *
@@ -14,12 +15,12 @@
  * The transformers need to understand how to operate on your specific state
  * value.
  *
- * @param {*} state -- the initial state value
+ * @param {*} initialState -- the initial state value
  * @param {Object<string, Function>} Map of state transformers, where the key is the
  *     action type and the value is a state transformer.
  */
-export default function StateStore(state = {}, stateTransformers = {}) {
-    return function(actions) {
+export default function StatelessStore(initialState = {}, stateTransformers = {}) {
+    return function(actions, state = initialState) {
         if (!actions) {
             return state;
         }

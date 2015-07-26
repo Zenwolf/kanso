@@ -5,3 +5,6 @@
 
 export const ACTION_HISTORY_MAX = 1000;
 export const DISPATCH_DELAY = 16; // milliseconds
+export const ERROR_APP = 'AppError';
+export const ERROR_QUERY_API = 'QueryApiError';
+export const ERROR_VALIDATION = 'ValidationError';

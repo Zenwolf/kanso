@@ -3,7 +3,7 @@
  * Apache 2.0 License
  */
 
-import {ERROR_QUERY_API} from './ErrorConstants';
+import {ERROR_QUERY_API} from './Constants';
 import throwErr from './util/throwErr';
 
 /**

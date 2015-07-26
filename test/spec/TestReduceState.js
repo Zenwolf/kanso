@@ -1,12 +1,12 @@
 import assert from 'assert';
 import {changeDescriptionAction, changeNameAction} from '../util/TestActionCreators';
 import createTestAppState from '../util/createTestAppState';
-import createTestStateTransformers from '../util/createTestStateTransformers';
+import createTestStateStores from '../util/createTestStateStores';
 import reduceState from '../../src/util/reduceState';
 import {KEY_NAMES} from '../util/TestConstants';
 
 const name = 'grue';
-const description = 'It is pitch black. You are likely to be eaten by a grue.'
+const description = 'It is pitch black. You are likely to be eaten by a grue.';
 
 const actions = [
     changeNameAction(name),
@@ -14,15 +14,15 @@ const actions = [
 ];
 
 const appState = createTestAppState();
-const stateTransformers = createTestStateTransformers();
+const stateStores = createTestStateStores();
 
 describe('reduceState', () => {
     it('should return the same state if nothing changed', () => {
-        assert(appState === reduceState(appState, stateTransformers, { type: 'foo' }));
+        assert(appState === reduceState(appState, stateStores, { type: 'foo' }));
     });
 
     it('should return a new state if an action changes a value', () => {
-        const result = reduceState(appState, stateTransformers, actions[0]);
+        const result = reduceState(appState, stateStores, actions[0]);
         const nameStuff = result.get(KEY_NAMES);
         assert(appState !== result);
         assert(nameStuff.get('name') === name);

@@ -14,7 +14,7 @@
  */
 export default function reduceState(state, stores, action) {
     return stores.reduce(
-        (_state, store, key) => _state.set(key, store(action)),
+        (_state, store, key) => _state.set(key, store(action, _state.get(key))),
         state
     );
 }

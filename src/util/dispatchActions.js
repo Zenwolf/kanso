@@ -4,7 +4,7 @@
  */
 
 import Immutable from 'immutable';
-import processAction from './processAction2';
+import reduceState from './reduceState';
 
 export default function dispatchActions(
     stores = Immutable.Map(),
@@ -12,7 +12,8 @@ export default function dispatchActions(
     actions = []
 ) {
     for (let i = 0, l = actions.length; i < l; i++) {
-        state = processAction(stores, state, actions[i]);
+        // state = processAction(stores, state, actions[i]);
+        state = reduceState(state, stores, actions[i]);
     }
 
     return state;

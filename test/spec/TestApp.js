@@ -4,16 +4,14 @@ import {changeNameAction} from '../util/TestActionCreators';
 import createTestActionInterceptors from '../util/createTestActionInterceptors';
 import createTestAppAPI from '../util/createTestAppAPI';
 import createTestAppState from '../util/createTestAppState';
-import createTestStateTransformers from '../util/createTestStateTransformers';
+import createTestStateStores from '../util/createTestStateStores';
 import {ERROR_APP} from '../../src/ErrorConstants';
 import Immutable from 'immutable';
-import TestConstants from '../util/TestConstants';
+import {KEY_NAMES } from '../util/TestConstants';
 
 const actionInterceptors = createTestActionInterceptors();
-const AppAPI = createTestAppAPI();
-const appState = createTestAppState();
-const appAPI = AppAPI(appState);
-const stateTransformers = createTestStateTransformers();
+const AppApi = createTestAppAPI();
+const stateStores = createTestStateStores();
 
 let renderCalled = false;
 let testApp = null;
@@ -28,36 +26,18 @@ describe('App', () => {
     beforeEach(() => {
         testApp = new TestApp({
             actionInterceptors,
-            AppAPI,
-            initialState: appState,
-            stateTransformers
+            AppApi,
+            stateStores
         });
         renderCalled = false;
-    });
-
-
-    describe('constructor', () => {
-        it('should throw an error if no AppAPI is provided', () => {
-            try {
-                new App({
-                    initialState: appState,
-                    stateTransformers
-                });
-                throw new Error(`Expected ${ERROR_APP} to be thrown.`);
-            }
-            catch (e) {
-                assert(e.name === ERROR_APP);
-            }
-        });
     });
 
 
     describe('#actionInterceptors', () => {
         it('should return an empty Immutable.List by default', () => {
             const app = new App({
-                AppAPI,
-                initialState: appState,
-                stateTransformers
+                AppApi,
+                stateStores
             });
 
             assert(Immutable.List.isList(app.actionInterceptors));
@@ -73,9 +53,8 @@ describe('App', () => {
             const interceptors = actionInterceptors.toJS();
             const app = new App({
                 actionInterceptors: interceptors,
-                AppAPI,
-                initialState: appState,
-                stateTransformers
+                AppApi,
+                stateStores
             });
 
             assert(Immutable.List.isList(app.actionInterceptors));
@@ -87,29 +66,33 @@ describe('App', () => {
     });
 
 
-    describe('#addChangeListener', () => {
+    describe('#addStateChangeListener', () => {
         it('should return the current listeners as an Immutable.List', () => {
-            const listeners = testApp.addChangeListener(() => {});
+            const listeners = testApp.addStateChangeListener(() => {});
             assert(Immutable.List.isList(listeners));
             assert(listeners.size === 1);
-            assert(testApp.changeListeners === listeners);
+            assert(testApp.stateChangeListeners === listeners);
         });
 
         it('should add a listener function', () => {
             function testFn() {}
-            const listeners = testApp.addChangeListener(testFn);
+            const listeners = testApp.addStateChangeListener(testFn);
             assert(listeners.first() === testFn);
-            assert(testApp.changeListeners.first() === testFn);
+            assert(testApp.stateChangeListeners.first() === testFn);
         });
     });
 
 
     describe('#api', () => {
         it('should return the current api instance', () => {
+            const state = Immutable.Map({
+                [KEY_NAMES]: stateStores.get(KEY_NAMES)()
+            });
+            const expectedApi = AppApi(state);
             const api = testApp.api;
-            assert(JSON.stringify(api) === JSON.stringify(appAPI));
+            assert(JSON.stringify(api) === JSON.stringify(expectedApi));
         });
-    })
+    });
 
 
     describe('#dispatch', () => {
@@ -119,12 +102,12 @@ describe('App', () => {
             function check(app) {
                 assert(testApp === app);
                 assert(app.api.getName() === newName);
-                app.removeChangeListener(check);
+                app.removeStateChangeListener(check);
                 return done();
             }
 
             assert(testApp.api.getName() !== newName);
-            testApp.addChangeListener(check);
+            testApp.addStateChangeListener(check);
             testApp.dispatch(changeNameAction(newName));
         });
     });

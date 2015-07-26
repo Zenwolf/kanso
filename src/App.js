@@ -25,10 +25,19 @@ export default class App {
 
         let state = Immutable.Map();
         let actionHistory = Immutable.List();
-        let api = AppApi ? AppApi(state) : null;
+        let api = null;
         let isDispatching = false;
         let pendingActions = [];
         let stateChangeListeners = Immutable.List();
+
+        // Set up the initial state by calling all stores and saving their
+        // initial states into the global map using their keys.
+        state = stateStores.reduce(
+            (_state, store, key) => _state.set(key, store()),
+            state
+        );
+
+        api = AppApi ? AppApi(state) : null;
 
         const setState = nextState => {
             if (nextState === state) {
@@ -46,7 +55,7 @@ export default class App {
             const listenerCount = stateChangeListeners.forEach(
                 listener => listener(this));
 
-            if (__DEV__ && listenerCount !== stateChangeListeners.size) {
+            if (__DEV__ && (listenerCount < stateChangeListeners.size)) {
                 throwErr(
                     'AppError',
                     `Not all state change listeners called:
@@ -160,9 +169,12 @@ export default class App {
              */
             initializeState: {
                 enumerable: true,
-                value: actions =>
+                value: actions => {
                     // Skip extra state change logic and update state directly.
-                    state = dispatchActions(stateStores, state, actions)
+                    state = dispatchActions(stateStores, state, actions);
+                    api = AppApi ? AppApi(state) : null;
+                    return state;
+                }
             },
 
             /**
@@ -211,6 +223,11 @@ export default class App {
             state: {
                 enumerable: true,
                 get: () => state
+            },
+
+            stateChangeListeners: {
+                enumerable: true,
+                get: () => stateChangeListeners
             },
 
             /**
