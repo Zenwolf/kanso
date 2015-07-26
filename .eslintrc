@@ -9,6 +9,10 @@
         "modules": true
     },
 
+    "globals": {
+        "__DEV__": true
+    },
+
     "rules": {
         "eol-last": [2],
         "new-cap": [0],

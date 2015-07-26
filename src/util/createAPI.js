@@ -3,13 +3,13 @@
  * Apache 2.0 License
  */
 
-import QueryAPI from '../QueryAPI';
+import QueryApi from '../QueryApi';
 
 /**
  * @param {Object} queries
  * @param {Function} validateState
  * @return {Function} the API object factory with the static queries.
  */
-export default function createAPI(queries, validateState) {
-    return QueryAPI({queries, validateState});
+export default function createApi(queries, validateState) {
+    return QueryApi({queries, validateState});
 }

@@ -3,168 +3,223 @@
  * Apache 2.0 License
  */
 
-import AppDataRecord from './AppDataRecord';
-import {ERROR_APP} from './ErrorConstants';
+import dispatchActions from './util/dispatchActions';
 import Immutable from 'immutable';
-import reduceData from './util/reduceData';
+import interceptActions from './util/interceptActions';
+import interceptState from './util/interceptState';
+import recordActions from './util/recordActions';
+import throwErr from './util/throwErr';
 
-const DISPATCH_DELAY = 16; // milliseconds
+import {DISPATCH_DELAY} from './Constants';
 
 export default class App {
     constructor({
         actionInterceptors = [],
-        AppAPI = null,
-        initialState = {},
+        AppApi = null,
         stateInterceptors = [],
-        stateTransformers = {}
-    } = {}) {
-        if (!AppAPI) {
-            throwErr('AppAPI is required.');
-        }
+        stateStores = {}
+    }) {
+        actionInterceptors = Immutable.List(actionInterceptors);
+        stateInterceptors = Immutable.List(stateInterceptors);
+        stateStores = Immutable.Map(stateStores);
 
-        let _state = Immutable.Map(initialState);
-
-        let appData = new AppDataRecord({
-            actionInterceptors: Immutable.List(actionInterceptors),
-            api: AppAPI(_state),
-            state: _state,
-            stateInterceptors: Immutable.List(stateInterceptors),
-            stateTransformers: Immutable.Map(stateTransformers),
-            staticAPI: AppAPI
-        });
-
+        let state = Immutable.Map();
+        let actionHistory = Immutable.List();
+        let api = AppApi ? AppApi(state) : null;
         let isDispatching = false;
         let pendingActions = [];
-        let changeListeners = Immutable.List();
+        let stateChangeListeners = Immutable.List();
 
-        const visitListener = listener => listener(this);
-
-        const dispatchActions = () => {
-            // console.log('#dispatchActions...');
-
-            const initialData = appData;
-            const actions = pendingActions;
-            pendingActions = [];
-
-            isDispatching = true;
-            appData = reduceData(appData, actions);
-            // console.log(appData.toJS());
-
-            // If the appData changes, call all change listeners.
-            // console.log('Checking if appData changed...');
-            if (appData !== initialData) {
-                // console.log('appData changed...');
-                // console.log('Calling change listeners...');
-                changeListeners.forEach(visitListener);
+        const setState = nextState => {
+            if (nextState === state) {
+                // Nothing changed, so return
+                return;
             }
 
-            isDispatching = false;
+            state = nextState;
+            api = AppApi ? AppApi(nextState) : null;
+
+            // Notify state change listeners because of a new state
+            // DEV NOTE: since this an Immutable.List, if a listener returns a
+            // boolean false, iteration will stop. We will check for this
+            // below and issue an error.
+            const listenerCount = stateChangeListeners.forEach(
+                listener => listener(this));
+
+            if (__DEV__ && listenerCount !== stateChangeListeners.size) {
+                throwErr(
+                    'AppError',
+                    `Not all state change listeners called:
+                        A listener may have returned boolean false.
+                        Returning false stops listener iteration.
+                    `
+                );
+            }
         };
 
+        /*
+         * By using a queue-and-flush pattern, we avoid the problem of actions
+         * being dispatched during other actions. With the queue, additional
+         * actions are queued as pending until the current dispatch transaction
+         * is complete.
+         */
         const tryToDispatch = () => {
-            // console.log('#tryToDispatch...');
-
             if (isDispatching) {
                 setTimeout(tryToDispatch, DISPATCH_DELAY);
                 return;
             }
 
-            dispatchActions();
-            this.render(this);
+            isDispatching = true;
+            let actions = pendingActions;
+            pendingActions = [];
+            actions = interceptActions(actionInterceptors, actions);
+
+            let nextState = dispatchActions(stateStores, state, actions);
+            nextState = interceptState(stateInterceptors, nextState);
+            setState(nextState);
+
+            actionHistory = recordActions(actionHistory, actions);
+            isDispatching = false;
         };
 
+        /*
+         * Using defineProperties allows us to create instance methods that are
+         * automatically bound to the current instance, have access to the
+         * private values if necessary while creating a separate public object
+         * API.
+         */
         Object.defineProperties(this, {
-            /**
-             * @type {Immutable.List<Function>}
-             */
+            /** @return {Immutable.List<Object>} action history */
+            actionHistory: {
+                enumerable: true,
+                get: () => actionHistory
+            },
+
+            /** @return {Immutable.List<Function>} */
             actionInterceptors: {
                 enumerable: true,
-                get: () => appData.actionInterceptors
-            },
-
-            addChangeListener: {
-                enumerable: true,
-                value: listener => changeListeners.includes(listener) ?
-                    changeListeners :
-                    changeListeners = changeListeners.push(listener)
+                get: () => actionInterceptors
             },
 
             /**
-             * Get the stateful API snapshot that is bound to the current
-             * app state.
-             * @return {Object}
+             * @param {Function} interceptor function with signature:
+             *     action => action
+             * @return {Immutable.List<Function>} interceptors
              */
+            addActionInterceptor: {
+                enumerable: true,
+                value: interceptor => actionInterceptors.includes(interceptor) ?
+                    actionInterceptors :
+                    actionInterceptors = actionInterceptors.push(interceptor)
+            },
+
+            /**
+             * @param {Function} listener with signature:
+             *     app => undefined
+             * @return {Immutable.List<Function>} listeners
+             */
+            addStateChangeListener: {
+                enumerable: true,
+                value: listener => stateChangeListeners.includes(listener) ?
+                    stateChangeListeners :
+                    stateChangeListeners = stateChangeListeners.push(listener)
+            },
+
+            /**
+             * @param {Function} interceptor function with signature:
+             *     state => state
+             * @return {Immutable.List<Function>} interceptors
+             */
+            addStateInterceptor: {
+                enumerable: true,
+                value: interceptor => stateInterceptors.includes(interceptor) ?
+                    stateInterceptors :
+                    stateInterceptors = stateInterceptors.push(interceptor)
+            },
+
+            /** @return {Object} app's stateful state query API */
             api: {
                 enumerable: true,
-                get: () => appData.api
+                get: () => api
             },
 
-            changeListeners: {
-                enumerable: true,
-                get: () => changeListeners
-            },
-
+            /**
+             * @return {undefined}
+             */
             dispatch: {
                 enumerable: true,
                 value: action => {
-                    // console.log('#dispatch...');
                     pendingActions.push(action);
                     tryToDispatch();
                 }
             },
 
-            removeChangeListener: {
+            /**
+             * @param {Array<Object>} actions
+             * @return {Immutable.Map<string, *>} state
+             */
+            initializeState: {
+                enumerable: true,
+                value: actions =>
+                    // Skip extra state change logic and update state directly.
+                    state = dispatchActions(stateStores, state, actions)
+            },
+
+            /**
+             * @param {Function} interceptor
+             * @return {Immutable.List<Function>} interceptors
+             */
+            removeActionInterceptor: {
+                enumerable: true,
+                value: interceptor => {
+                    const index = actionInterceptors.indexOf(interceptor);
+                    return index > -1 ?
+                        actionInterceptors = actionInterceptors.delete(index) :
+                        actionInterceptors;
+                }
+            },
+
+            /**
+             * @param {Function} listener
+             * @return {Immutable.List<Function>} listeners
+             */
+            removeStateChangeListener: {
                 enumerable: true,
                 value: listener => {
-                    const index = changeListeners.indexOf(listener);
+                    const index = stateChangeListeners.indexOf(listener);
                     return index > -1 ?
-                        changeListeners.delete(index) :
-                        changeListeners;
+                        stateChangeListeners = stateChangeListeners.delete(index) :
+                        stateChangeListeners;
                 }
             },
 
-            // Override to implement functionality.
-            render: {
-                enumerable: true,
-                value: app => {
-                    // Override to implement your own UI layer. For example,
-                    // if using React, you could render your top-level
-                    // component here and pass in the current api or state.
-                    // When the appData changes, the UI can be re-rendered with
-                    // the newly updated api or state.
-                }
-            },
-
-            /**
-             * @type {Immutable.Map<string, *>}
-             */
+            /** @return {Immutable.Map<string, *>} global state map */
             state: {
                 enumerable: true,
-                get: () => appData.state
+                get: () => state
             },
 
             /**
-             * @type {Immutable.List<Function>}
+             * @return {Immutable.List<Function>} interceptors
              */
-            stateTransformers: {
+            stateInterceptors: {
                 enumerable: true,
-                get: () => appData.stateTransformers
+                get: () => stateInterceptors
             },
 
             /**
-             * Get the stateless, static API.
-             * @return {Function}
+             * @return {Immutable.Map<string, Function>} stores
              */
-            staticAPI: {
+            stateStores: {
                 enumerable: true,
-                get: () => appData.staticAPI
+                get: () => stateStores
+            },
+
+            /** @return {QueryApi} stateless query api. */
+            staticApi: {
+                enumerable: true,
+                get: () => AppApi
             }
         });
     }
-}
-
-function throwErr(msg) {
-    const err = new Error('msg');
-    err.name = ERROR_APP;
-    throw err;
 }

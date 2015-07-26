@@ -4,6 +4,7 @@
  */
 
 import {ERROR_QUERY_API} from './ErrorConstants';
+import throwErr from './util/throwErr';
 
 /**
  * Creates an API factory function that queries a specific state for data.
@@ -18,7 +19,7 @@ import {ERROR_QUERY_API} from './ErrorConstants';
  *
  * @return {Function} API object factory with the static queries
  */
-export default function QueryAPI({
+export default function QueryApi({
     queries = null,
     validateState = null
 } = {}) {
@@ -52,18 +53,12 @@ export default function QueryAPI({
 
 function validateQueries(queries) {
     if ((typeof queries !== 'object') || Array.isArray(queries)) {
-        throwErr('queries must be an object.');
+        throwErr(ERROR_QUERY_API, 'queries must be an object.');
     }
 }
 
 function validateStateFn(fn) {
     if (typeof fn !== 'function') {
-        throwErr('validateState must be a function.');
+        throwErr(ERROR_QUERY_API, 'validateState must be a function.');
     }
-}
-
-function throwErr(msg) {
-    const err = new Error(msg);
-    err.name = ERROR_QUERY_API;
-    throw err;
 }
