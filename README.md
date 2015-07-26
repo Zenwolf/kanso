@@ -19,7 +19,7 @@ Overview
 Kanso focuses on encapsulating state and logic, separating them from the UI layer. State is maintained in a single place and can be passed into another system for processing
 or rendering.
 
-Kanso creates the world: something else can render it.
+Kanso shapes the world: something else can render it into the visible realm.
 
 ### No Defined UI layer
 Kanso defines no specific UI, allowing you to use any UI technology you like. Your UI of choice will need to accept the entire state and use it as it sees fit. The UI will need to be able to create actions and dispatch them on the app object using the `App#dispatch` method.
@@ -27,10 +27,10 @@ Kanso defines no specific UI, allowing you to use any UI technology you like. Yo
 ### Core concepts
 
 1. Unidirectional data flow that operates solely on actions/commands.
-2. Immutable state managed by a state stores.
+2. Immutable state managed by state data stores.
 3. Interceptors to extend the core system:
-    * action interceptors -- allow you to act upon an action or change the action/replace it.
-    * state interceptors -- allow you to act upon a new state before it is set or change it/replace it.
+    * action interceptors -- allow you to act upon an action or change the action/replace it before it is passed to stores and used to modify state.
+    * state interceptors -- allow you to act upon a new state before it is set, or change it/replace it, before change listeners are called.
 4. Standard way to define state queries using `QueryApi` generator, which can be used statelessly(static methods) or statefully(bound to a specific state snapshot).
 
 
