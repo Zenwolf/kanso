@@ -1,4 +1,4 @@
-QueryAPI
+QueryApi
 ============================================================
 
 Creates an API factory function that queries a specific state for values.
@@ -34,7 +34,7 @@ Given some example state like this:
 
 We create an API:
 
-    const MyAPI = QueryAPI({
+    const MyApi = QueryApi({
         queries: {
             getName(state) {
                 return state.name;
@@ -73,15 +73,15 @@ You can use the API is two ways:
 1. _Stateless with pure static functions._ This is useful when the state is owned externally and will be passed into the query functions.
 2. _Stateful with functions bound to a specific state instance._ This is useful if you want to create a specific instance of the API bound to a specific state snapshot, and pass it to some other part of the app without worrying about it changing or being effected in any way(this is easy if you are using immutable data structures). For example, passing the current state+API to the rendering layer.
 
-The examples below build upon the `MyAPI` we built above.
+The examples below build upon the `MyApi` we built above.
 
 ### Using a stateless API
 
-    const name = MyAPI.getName(myState);
-    const thing1 = MyAPI.getThingById(myState, '1');
+    const name = MyApi.getName(myState);
+    const thing1 = MyApi.getThingById(myState, '1');
 
 ### Using a stateful API
 
-    const api = MyAPI(myState);
+    const api = MyApi(myState);
     const name = api.getName();
     const thing1 = api.getThingById('1');

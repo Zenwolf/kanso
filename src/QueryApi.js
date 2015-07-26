@@ -8,7 +8,7 @@ import throwErr from './util/throwErr';
 
 /**
  * Creates an API factory function that queries a specific state for data.
- * See: {@link ../docs/QueryAPI.md}
+ * See: {@link ../docs/QueryApi.md}
  *
  * @param {Object} options.queries -- contains all the functions that query data
  *     from the provided state. The state must always be the first function

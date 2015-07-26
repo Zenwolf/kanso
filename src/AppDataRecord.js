@@ -31,6 +31,6 @@ export default Immutable.Record({
      */
     stateTransformers: Immutable.Map(),
 
-    /** @type {Function} API factory from using QueryAPI() */
+    /** @type {Function} API factory from using QueryApi() */
     staticAPI: null
 });
