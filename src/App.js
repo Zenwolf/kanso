@@ -193,6 +193,20 @@ export default class App {
                 }
             },
 
+            /**
+             * @param {Function} interceptor
+             * @return {Immutable.List<Function>} interceptors
+             */
+            removeStateInterceptor: {
+                enumerable: true,
+                value: interceptor => {
+                    const index = stateInterceptors.indexOf(interceptor);
+                    return index > -1 ?
+                        stateInterceptors = stateInterceptors.delete(index) :
+                        stateInterceptors;
+                }
+            },
+
             /** @return {Immutable.Map<string, *>} global state map */
             state: {
                 enumerable: true,
