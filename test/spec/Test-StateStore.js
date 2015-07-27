@@ -42,7 +42,7 @@ describe('StateStore', () => {
         assert(store({ type: 'ZOT' }) === initialState);
     });
 
-    it("store fn should return a new state when an action is provided that it understands", () => {
+    it('store fn should return a new state when an action is provided that it understands', () => {
         const newName = 'bar';
         const state = store({ type: ACTION_CHANGE_NAME, name: newName });
         assert(state !== initialState);
