@@ -15,7 +15,7 @@ const stateStores = createTestStateStores();
 let renderCalled = false;
 let testApp = null;
 
-describe('App', () => {
+describe('kanso', () => {
     beforeEach(() => {
         testApp = kanso({
             actionInterceptors,

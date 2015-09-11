@@ -3,7 +3,7 @@
  * Apache 2.0 License
  */
 
-import {ERROR_QUERY_API} from './Constants';
+import {ERROR_QUERY_API} from './constants';
 import throwErr from './util/throwErr';
 
 /**
@@ -19,7 +19,7 @@ import throwErr from './util/throwErr';
  *
  * @return {Function} API object factory with the static queries
  */
-export default function QueryApi({
+export default function queryApi({
     queries = null,
     validateState = null
 } = {}) {

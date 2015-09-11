@@ -1,6 +1,6 @@
 import assert from 'assert';
 import Immutable from 'immutable';
-import StateStore from '../../src/StateStore';
+import stateStore from '../../src/stateStore';
 
 import {
     ACTION_CHANGE_NAME,
@@ -9,12 +9,12 @@ import {
 const initialState = Immutable.Map({ name: 'foo' });
 
 function createStore() {
-    return StateStore(initialState, {
+    return stateStore(initialState, {
         [ACTION_CHANGE_NAME]: (state, action) => state.set('name', action.name)
     });
 }
 
-describe('StateStore', () => {
+describe('stateStore', () => {
     let store;
 
     beforeEach(() => {
@@ -26,7 +26,7 @@ describe('StateStore', () => {
     });
 
     it('should assign an object as default state if none is provided', () => {
-        store = StateStore();
+        store = stateStore();
         const defaultState = store();
         const state = store({ type: 'ZOT' });
         assert(typeof defaultState === 'object');

@@ -10,7 +10,7 @@ import interceptState from './util/interceptState';
 import recordActions from './util/recordActions';
 import throwErr from './util/throwErr';
 
-import {DISPATCH_DELAY} from './Constants';
+import {DISPATCH_DELAY, ERROR_KANSO} from './constants';
 
 export default function kanso({
     actionInterceptors = [],
@@ -218,7 +218,7 @@ export default function kanso({
 
         if (__DEV__ && (listenerCount < stateChangeListeners.size)) {
             throwErr(
-                'KansoError',
+                ERROR_KANSO,
                 `Not all state change listeners called:
                     A listener may have returned boolean false.
                     Returning false stops listener iteration.

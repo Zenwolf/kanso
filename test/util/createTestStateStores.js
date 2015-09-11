@@ -3,7 +3,7 @@ import {
     ACTION_CHANGE_NAME,
     KEY_NAMES } from './TestConstants';
 import Immutable from 'immutable';
-import StateStore from '../../src/StateStore';
+import stateStore from '../../src/stateStore';
 
 const actionHandlers = {
     [ACTION_CHANGE_DESC]: (state, action) => state.set('description', action.newDesc),
@@ -15,8 +15,8 @@ const initialNameState = Immutable.Map({
     description: 'An interactive text adventure.'
 });
 
-export default function createTestStateStores() {
+export default function createTeststateStores() {
     return Immutable.Map({
-        [KEY_NAMES]: StateStore(initialNameState, actionHandlers)
+        [KEY_NAMES]: stateStore(initialNameState, actionHandlers)
     });
 }

@@ -1,7 +1,7 @@
 import assert from 'assert';
 import dispatchActions from '../../src/util/dispatchActions';
 import Immutable from 'immutable';
-import StatelessStore from '../../src/StatelessStore';
+import statelessStore from '../../src/statelessStore';
 import {
     changeDescriptionAction,
     changeNameAction } from '../util/TestActionCreators';
@@ -16,7 +16,7 @@ const namesState = Immutable.Map({
     name: 'foo'
 });
 
-const namesStore = StatelessStore(namesState, {
+const namesStore = statelessStore(namesState, {
     [ACTION_CHANGE_DESC]: (state, action) => state.set('description', action.newDesc),
     [ACTION_CHANGE_NAME]: (state, action) => state.set('name', action.newName)
 });

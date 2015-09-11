@@ -1,8 +1,8 @@
 import assert from 'assert';
-import QueryApi from '../../src/QueryApi';
-import {ERROR_QUERY_API} from '../../src/Constants';
+import queryApi from '../../src/queryApi';
+import {ERROR_QUERY_API} from '../../src/constants';
 
-describe('QueryApi', () => {
+describe('queryApi', () => {
     const testState = {
         name: 'foo',
         things: [
@@ -43,13 +43,13 @@ describe('QueryApi', () => {
     let api = null;
 
     beforeEach(() => {
-        TestApi = QueryApi(config);
+        TestApi = queryApi(config);
         api = TestApi(testState);
     });
 
     it('should throw error if there are no queries', () => {
         try {
-            QueryApi({ validateState: config.validateState });
+            queryApi({ validateState: config.validateState });
             throw new Error('expected error');
         }
         catch (e) {
@@ -59,7 +59,7 @@ describe('QueryApi', () => {
 
     it('should throw error if there is no validateState function', () => {
         try {
-            QueryApi({ queries: config.queries });
+            queryApi({ queries: config.queries });
             throw new Error('expected error');
         }
         catch (e) {

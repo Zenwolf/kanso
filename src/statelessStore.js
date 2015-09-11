@@ -19,7 +19,7 @@
  * @param {Object<string, Function>} Map of state transformers, where the key is the
  *     action type and the value is a state transformer.
  */
-export default function StatelessStore(initialState = {}, stateTransformers = {}) {
+export default function statelessStore(initialState = {}, stateTransformers = {}) {
     return function(actions, state = initialState) {
         if (!actions) {
             return state;

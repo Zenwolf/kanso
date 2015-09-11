@@ -1,6 +1,6 @@
 import assert from 'assert';
 import Immutable from 'immutable';
-import StatelessStore from '../../src/StatelessStore';
+import statelessStore from '../../src/statelessStore';
 
 import {
     ACTION_CHANGE_NAME,
@@ -9,12 +9,12 @@ import {
 const initialState = Immutable.Map({ name: 'foo' });
 
 function createStore() {
-    return StatelessStore(initialState, {
+    return statelessStore(initialState, {
         [ACTION_CHANGE_NAME]: (state, action) => state.set('name', action.name)
     });
 }
 
-describe('StatelessStore', () => {
+describe('statelessStore', () => {
     let store;
 
     beforeEach(() => {
