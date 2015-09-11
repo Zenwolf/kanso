@@ -1,4 +1,4 @@
-QueryApi
+queryApi
 ============================================================
 
 Creates an API factory function that queries a specific state for values.
@@ -34,7 +34,7 @@ Given some example state like this:
 
 We create an API:
 
-    const MyApi = QueryApi({
+    const myApi = queryApi({
         queries: {
             getName(state) {
                 return state.name;
@@ -77,11 +77,11 @@ The examples below build upon the `MyApi` we built above.
 
 ### Using a stateless API
 
-    const name = MyApi.getName(myState);
-    const thing1 = MyApi.getThingById(myState, '1');
+    const name = myApi.getName(myState);
+    const thing1 = myApi.getThingById(myState, '1');
 
 ### Using a stateful API
 
-    const api = MyApi(myState);
+    const api = myApi(myState);
     const name = api.getName();
     const thing1 = api.getThingById('1');
