@@ -1,12 +1,11 @@
 {
-  "name": "kanso",
+  "name": "@zenwolf/kanso",
   "version": "0.0.1",
-  "private": true,
-  "description": "Light-weight, unidirectional, isolated-state app tools.",
+  "private": false,
+  "description": "Light-weight, unidirectional, state-management library.",
   "main": "lib",
   "dependencies": {
-    "immutable": "^3.7.4",
-    "object-assign": "^3.0.0"
+    "immutable": "^3.7.4"
   },
   "devDependencies": {
     "babel": "^5.6.14",
