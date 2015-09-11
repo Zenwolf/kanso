@@ -1,7 +1,7 @@
 Kanso
 ============================================================
 
-Kanso is a light-weight architecture for web applications. Kanso's philosophy is to provide simple systems that can be used at your own discretion. You can use these patterns in many ways. Kanso molds to the skill of the user.
+Kanso is a light-weight state-management library for web applications. Kanso's philosophy is to provide simple mechanics that can be used at your own discretion. You can use these patterns in many ways. Kanso molds to the skill of the user.
 
 ["By removing the non-essential and ornate, we can express a bare and honest simplicity."](http://web.archive.org/web/20120225201014/http://aentan.com/design/wabi-sabi-and-japanese-aesthetics/)
 
@@ -16,7 +16,7 @@ Overview
 ------------------------------------------------------------
 
 ### Encapsulated state
-Kanso focuses on encapsulating state and logic, separating them from the UI layer. State is maintained in a single place and can be passed into another system for processing
+Kanso focuses on encapsulating state and logic, separating them from any UI layer. State is maintained in a single place and can be passed into another system for processing
 or rendering.
 
 Kanso shapes the world: something else can render it into the visible realm.
