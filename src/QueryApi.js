@@ -52,7 +52,7 @@ export default function QueryApi({
 }
 
 function validateQueries(queries) {
-    if ((typeof queries !== 'object') || Array.isArray(queries)) {
+    if (!queries || (typeof queries !== 'object') || Array.isArray(queries)) {
         throwErr(ERROR_QUERY_API, 'queries must be an object.');
     }
 }
