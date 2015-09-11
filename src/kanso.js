@@ -90,10 +90,14 @@ export default function kanso({
     }
 
     let kansoObj = {
-        /** @return {Immutable.List<Object>} action history */
+        /**
+         * @return {Immutable.List<Object>} action history
+         */
         actionHistory: function() { return actionHistory; },
 
-        /** @return {Immutable.List<Function>} */
+        /**
+         * @return {Immutable.List<Function>}
+         */
         actionInterceptors: function() { return actionInterceptors; },
 
         /**
@@ -117,7 +121,9 @@ export default function kanso({
          */
         addStateInterceptor,
 
-        /** @return {Object} stateful state query API */
+        /**
+         * @return {Object} stateful state query API
+         */
         api: function() { return api; },
 
         /**
