@@ -4,12 +4,12 @@ import Immutable from 'immutable';
 import statelessStore from '../../src/statelessStore';
 import {
     changeDescriptionAction,
-    changeNameAction } from '../util/TestActionCreators';
+    changeNameAction } from '../util/testActionCreators';
 
 import {
     ACTION_CHANGE_DESC,
     ACTION_CHANGE_NAME,
-    KEY_NAMES } from '../util/TestConstants';
+    KEY_NAMES } from '../util/testConstants';
 
 const namesState = Immutable.Map({
     description: 'blah',

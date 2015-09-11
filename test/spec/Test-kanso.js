@@ -1,12 +1,12 @@
 import kanso from '../../src/kanso';
 import assert from 'assert';
-import {changeNameAction} from '../util/TestActionCreators';
+import {changeNameAction} from '../util/testActionCreators';
 import createTestActionInterceptors from '../util/createTestActionInterceptors';
 import createTestAppAPI from '../util/createTestAppAPI';
 import createTestAppState from '../util/createTestAppState';
 import createTestStateStores from '../util/createTestStateStores';
 import Immutable from 'immutable';
-import {ERROR_APP, KEY_NAMES } from '../util/TestConstants';
+import {ERROR_APP, KEY_NAMES } from '../util/testConstants';
 
 const actionInterceptors = createTestActionInterceptors();
 const apiFn = createTestAppAPI();

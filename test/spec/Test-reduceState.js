@@ -1,9 +1,9 @@
 import assert from 'assert';
-import {changeDescriptionAction, changeNameAction} from '../util/TestActionCreators';
+import {changeDescriptionAction, changeNameAction} from '../util/testActionCreators';
 import createTestAppState from '../util/createTestAppState';
 import createTestStateStores from '../util/createTestStateStores';
 import reduceState from '../../src/util/reduceState';
-import {KEY_NAMES} from '../util/TestConstants';
+import {KEY_NAMES} from '../util/testConstants';
 
 const name = 'grue';
 const description = 'It is pitch black. You are likely to be eaten by a grue.';
