@@ -1,15 +1,16 @@
 {
   "name": "@zenwolf/kanso",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "description": "Light-weight, unidirectional, state-management library.",
   "main": "lib",
   "dependencies": {
-    "immutable": "^3.7.4"
+    "immutable": "~3.7.4"
   },
   "devDependencies": {
     "babel": "^5.6.14",
     "babel-core": "^5.5.5",
+    "babel-plugin-dev": "0.0.1",
     "eslint": "^0.24.0",
     "istanbul": "^0.3.17",
     "mocha": "^2.2.5"
@@ -27,10 +28,10 @@
   "scripts": {
     "build": "npm run clean && npm run mkdirs && npm run build-js",
     "build-js": "babel src --out-dir lib",
-    "clean": "rm -rf lib",
+    "clean": "rm -rf lib coverage",
     "coverage": "istanbul cover _mocha -- --compilers js:babel/register -R tap --recursive test/spec",
     "lint": "eslint ./src ./test",
-    "mkdirs": "mkdir -p lib assets/css",
+    "mkdirs": "mkdir -p lib",
     "test": "npm run test-debug && npm run test-prod",
     "test-base": "mocha --compilers js:babel/register -R tap --recursive test/spec",
     "test-debug": "NODE_ENV=development npm run test-base",
