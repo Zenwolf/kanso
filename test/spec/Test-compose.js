@@ -1,6 +1,6 @@
 import assert from 'assert';
-import composeFns from '../../src/util/composeFns';
-import Immutable from 'immutable';
+import compose from '../../src/util/compose';
+import {List} from 'immutable';
 
 let isDone = false;
 
@@ -16,36 +16,36 @@ const steps2 = [
     function step3(o) { o.step3 = true; return o; }
 ];
 
-const stepsList = Immutable.List(steps);
+const stepsList = List(steps);
 
-describe('composeFns', () => {
+describe('compose', () => {
     beforeEach(() => isDone = false);
     afterEach(() => isDone = false);
 
     it('should return a function from an array', () => {
-        const result = composeFns(...steps);
+        const result = compose(...steps);
         assert(typeof result === 'function');
     });
 
-    it('should return a function from an Immutable.List', () => {
-        const result = composeFns(...stepsList);
+    it('should return a function from a List', () => {
+        const result = compose(...stepsList);
         assert(typeof result === 'function');
     });
 
     it('should create a function chain from an array that completes', () => {
         assert(!isDone);
-        composeFns(...steps)();
+        compose(...steps)();
         assert(isDone);
     });
 
-    it('should create a function chain from an Immutable.List that completes', () => {
+    it('should create a function chain from a List that completes', () => {
         assert(!isDone);
-        composeFns(...stepsList)();
+        compose(...stepsList)();
         assert(isDone);
     });
 
     it('should create a function chain from an array that returns final values', () => {
-        const fn = composeFns(...steps2);
+        const fn = compose(...steps2);
         const result = fn({});
         assert(result);
         assert(result.step1);

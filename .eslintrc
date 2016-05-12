@@ -1,4 +1,6 @@
 {
+    "extends": "eslint:recommended",
+
     "env": {
         "browser": true,
         "es6": true,
@@ -17,14 +19,13 @@
         "eol-last": [2],
         "global-strict": [0],
         "new-cap": [0],
-        "no-alert": [0],
+        "no-alert": [2],
         "no-console": [2],
         "no-multi-spaces": [2],
-        "no-sequences": [0],
         "no-trailing-spaces": [2],
-        "no-underscore-dangle": [0],
         "no-unused-vars": [2, { "args": "none" }],
         "no-use-before-define": [2, "nofunc"],
-        "quotes": [2, "single", "avoid-escape"]
+        "quotes": [2, "single", "avoid-escape"],
+        "strict": [2, "global"]
     }
 }

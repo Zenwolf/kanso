@@ -3,7 +3,7 @@
  * Apache 2.0 License
  */
 
-import composeFns from './composeFns';
+import compose from './compose';
 import Immutable from 'immutable';
 
 /**
@@ -22,5 +22,5 @@ export default function intercept(
         return value;
     }
 
-    return composeFns(...interceptors)(value);
+    return compose(...interceptors)(value);
 }
